@@ -9,6 +9,7 @@ async function gcxFetch(path) {
 
   const res = await fetch(`${GCX_BASE}${path}`, {
     headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
   });
 
   if (!res.ok) {
@@ -230,17 +231,21 @@ export async function GET() {
     // Clean up: remove milestones from individual projects (it's in the index now)
     const cleanProjects = results.map(({ milestones, ...rest }) => rest);
 
-    return Response.json({
+    return new Response(JSON.stringify({
       projects: cleanProjects,
       milestones: milestoneIndex,
       fetchedAt: new Date().toISOString(),
+    }), {
+      headers: { "Content-Type": "application/json", "Cache-Control": "no-store, no-cache, must-revalidate" },
     });
   } catch (err) {
     console.error("GCX API error:", err);
-    return Response.json(
-      { error: err.message || "Failed to fetch GCX data" },
-      { status: 500 }
-    );
+    return new Response(JSON.stringify(
+      { error: err.message || "Failed to fetch GCX data" }
+    ), {
+      status: 500,
+      headers: { "Content-Type": "application/json", "Cache-Control": "no-store, no-cache, must-revalidate" },
+    });
   }
 }
 
