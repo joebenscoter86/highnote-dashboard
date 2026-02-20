@@ -106,7 +106,10 @@ function isOverdue(task) {
   const due = new Date(task.dueDate);
   const now = new Date();
   now.setHours(0, 0, 0, 0);
-  return due < now;
+  if (due < now) return true;
+  // NOT_STARTED tasks due today are effectively at risk
+  if (task.status === "NOT_STARTED" && due.getTime() === now.getTime()) return true;
+  return false;
 }
 
 // Format a date as "Feb 19" style

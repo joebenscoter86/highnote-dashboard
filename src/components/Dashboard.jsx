@@ -280,7 +280,7 @@ export default function Dashboard(){
   var pms=useMemo(function(){var s={};projects.forEach(function(p){s[p.pm]=1;});return Object.keys(s).sort();},[projects]);
   var byPM=useMemo(function(){var m={};projects.forEach(function(p){if(!m[p.pm])m[p.pm]={projects:0,atRisk:0,stuckTasks:0,done7d:0,upcoming:0};m[p.pm].projects++;if(p.status==="LATE"||p.status==="ON_HOLD"||p.stuck.length>0||p.wip.some(isOD))m[p.pm].atRisk++;m[p.pm].stuckTasks+=p.stuck.length;m[p.pm].done7d+=p.done.length;m[p.pm].upcoming+=p.up.length;});return m;},[projects]);
   var fp=pmFilter==="all"?projects:projects.filter(function(p){return p.pm===pmFilter;});
-  var risk=fp.filter(function(p){return p.status==="LATE"||p.status==="ON_HOLD"||p.stuck.length>0||p.wip.some(isOD);});
+  var risk=fp.filter(function(p){return p.status==="LATE"||p.status==="ON_HOLD"||p.stuck.length>0||p.wip.some(isOD)||p.up.some(isOD);});
   var withDone=fp.filter(function(p){return p.done.length>0;});
   var withUp=fp.filter(function(p){return p.up.length>0;});
   var tD=fp.reduce(function(s,p){return s+p.done.length;},0);
