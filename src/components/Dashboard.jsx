@@ -164,7 +164,7 @@ var FT=[
 ];
 
 var SC={ON_TIME:"#16a34a",LATE:"#dc2626",ON_HOLD:"#d97706"};var SL={ON_TIME:"On Time",LATE:"Late",ON_HOLD:"On Hold"};
-var RC={CUSTOMER:"#7c3aed",INTERNAL:"#0d9488",THIRD_PARTY:"#d97706",MIXED:"#64748b"};var RL={CUSTOMER:"Subscriber",INTERNAL:"Internal",THIRD_PARTY:"3rd Party",MIXED:"Mixed"};
+var RC={CUSTOMER:"#16a34a",INTERNAL:"#0d9488",THIRD_PARTY:"#d97706",MIXED:"#78756d"};var RL={CUSTOMER:"Subscriber",INTERNAL:"Internal",THIRD_PARTY:"3rd Party",MIXED:"Mixed"};
 
 // Highnote mark - the three dots logo rendered as clean circles
 function HNMark(props){var s=props.size||24;return <svg width={s} height={s} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#55F5A3"/><circle cx="54" cy="45" r="6.3" fill="#000"/><circle cx="35" cy="56" r="6.3" fill="#000"/><circle cx="67" cy="63" r="6.3" fill="#000"/></svg>;}
@@ -188,7 +188,7 @@ function Metric(props){var glowColor=props.color||"#16a34a";return <div style={{
   {props.sub&&<div style={{color:"#9c9789",fontSize:11,marginTop:6}}>{props.sub}</div>}
 </div>;}
 
-function TLine(props){var t=props.task;var pid=props.pid;var od=isOD(t);var dc=t.s==="DONE"?"#16a34a":t.s==="STUCK"?"#dc2626":od?"#d97706":"#2563eb";
+function TLine(props){var t=props.task;var pid=props.pid;var od=isOD(t);var dc=t.s==="DONE"?"#16a34a":t.s==="STUCK"||od?"#d97706":"#16a34a";
   var url=taskUrl(pid,t.tid,t.m);
   var nameEl=url?<a href={url} target="_blank" rel="noopener noreferrer" style={{flex:1,color:"#1a1a1a",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textDecoration:"none"}} onMouseEnter={function(e){e.currentTarget.style.color="#16a34a";e.currentTarget.style.textDecoration="underline"}} onMouseLeave={function(e){e.currentTarget.style.color="#1a1a1a";e.currentTarget.style.textDecoration="none"}}>{t.n}<ExtIcon color="#16a34a"/></a>:<span style={{flex:1,color:"#1a1a1a",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.n}</span>;
   return <div style={{display:"flex",alignItems:"center",gap:8,padding:"3px 0",fontSize:13}}>
@@ -212,28 +212,33 @@ function TList(props){var tasks=props.tasks;var pid=props.pid;
     </div>}
     {g.tasks.map(function(t,i){return <TLine key={i} task={t} pid={pid}/>;})}</div>;})}</div>;}
 
-function PCard(props){var p=props.proj;
+function PCard(props){var p=props.proj;var mode=props.mode||"full";
   var _a=useState(props.startOpen||false),open=_a[0],setOpen=_a[1];
   var _b=useState(props.initTab||"all"),sub=_b[0],setSub=_b[1];
-  var stk=p.stuck.length,odW=p.wip.filter(isOD).length,total=p.done.length+p.stuck.length+p.wip.length+p.up.length,has=total>0;
-  var subs=[{id:"all",l:"All",ct:total},{id:"stuck",l:"Stuck",ct:stk,c:"#dc2626"},{id:"wip",l:"In Progress",ct:p.wip.length,c:"#3b82f6"},{id:"done",l:"Done (7d)",ct:p.done.length,c:"#16a34a"},{id:"up",l:"Upcoming",ct:p.up.length,c:"#8b5cf6"}].filter(function(s){return s.ct>0;});
-  var vis=sub==="stuck"?p.stuck:sub==="wip"?p.wip:sub==="done"?p.done:sub==="up"?p.up:[].concat(p.stuck,p.wip,p.up,p.done);
+  var stk=p.stuck.length,odW=p.wip.filter(isOD).length;
+  var isFull=mode==="full";
+  var fixedTasks=mode==="risk"?[].concat(p.stuck,p.wip.filter(isOD)):mode==="done"?p.done:mode==="up"?p.up:null;
+  var fixedCount=fixedTasks?fixedTasks.length:0;
+  var total=isFull?p.done.length+p.stuck.length+p.wip.length+p.up.length:fixedCount;
+  var has=total>0;
+  var subs=isFull?[{id:"all",l:"All",ct:p.done.length+p.stuck.length+p.wip.length+p.up.length},{id:"stuck",l:"Stuck",ct:stk},{id:"wip",l:"In Progress",ct:p.wip.length},{id:"done",l:"Done (7d)",ct:p.done.length},{id:"up",l:"Upcoming",ct:p.up.length}].filter(function(s){return s.ct>0;}):null;
+  var vis=fixedTasks?fixedTasks:sub==="stuck"?p.stuck:sub==="wip"?p.wip:sub==="done"?p.done:sub==="up"?p.up:[].concat(p.stuck,p.wip,p.up,p.done);
   var pUrl=projUrl(p.pid);
-  return <div style={{background:"#ffffff",border:"1px solid #E2E0D6",borderRadius:16,marginBottom:10,overflow:"hidden",borderLeft:"4px solid "+SC[p.status],boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}>
+  return <div style={{background:"#ffffff",border:"1px solid #E2E0D6",borderRadius:16,marginBottom:10,overflow:"hidden",borderLeft:"4px solid "+(SC[p.status]||"#16a34a"),boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}>
     <div style={{padding:"14px 18px",display:"flex",alignItems:"center",gap:12,userSelect:"none"}}>
       {has&&<span onClick={function(){setOpen(!open)}} style={{color:"#78756d",fontSize:10,transition:"transform 0.15s",transform:open?"rotate(90deg)":"rotate(0)",cursor:"pointer",padding:"4px"}}>&#9654;</span>}
       <div style={{flex:1,minWidth:0,cursor:has?"pointer":"default"}} onClick={function(){if(has)setOpen(!open)}}>
         <div style={{display:"flex",alignItems:"center",gap:6}}>
           {pUrl?<a href={pUrl} target="_blank" rel="noopener noreferrer" style={{color:"#1a1a1a",fontSize:14,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textDecoration:"none"}} onClick={function(e){e.stopPropagation()}} onMouseEnter={function(e){e.currentTarget.style.color="#16a34a";e.currentTarget.style.textDecoration="underline"}} onMouseLeave={function(e){e.currentTarget.style.color="#1a1a1a";e.currentTarget.style.textDecoration="none"}}>{p.name}<ExtIcon color="#16a34a" size={11}/></a>:<span style={{color:"#1a1a1a",fontSize:14,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.name}</span>}
         </div>
-        <div style={{color:"#78756d",fontSize:11,marginTop:2}}>PM: {p.pm}</div>
+        <div style={{color:"#78756d",fontSize:11,marginTop:2}}>PM: {p.pm}{!isFull&&has?<span style={{color:"#9c9789"}}>{" · "+total+" task"+(total!==1?"s":"")}</span>:""}</div>
       </div>
-      <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0,flexWrap:"wrap",justifyContent:"flex-end"}}>
-        {stk>0&&<Badge label={stk+" stuck"} c="#dc2626"/>}{odW>0&&<Badge label={odW+" overdue"} c="#f59e0b"/>}{p.done.length>0&&<Badge label={p.done.length+" done"} c="#16a34a"/>}{p.up.length>0&&<Badge label={p.up.length+" upcoming"} c="#8b5cf6"/>}
-        <Badge label={SL[p.status]||p.status} c={SC[p.status]||"#6b7280"}/></div></div>
+      {isFull&&<div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0,flexWrap:"wrap",justifyContent:"flex-end"}}>
+        {stk>0&&<Badge label={stk+" stuck"} c="#dc2626"/>}{odW>0&&<Badge label={odW+" overdue"} c="#d97706"/>}{p.done.length>0&&<Badge label={p.done.length+" done"} c="#16a34a"/>}{p.up.length>0&&<Badge label={p.up.length+" upcoming"} c="#16a34a"/>}
+        <Badge label={SL[p.status]||p.status} c={SC[p.status]||"#6b7280"}/></div>}</div>
     {open&&<div style={{borderTop:"1px solid #E2E0D6"}}>
-      <div style={{display:"flex",gap:0,padding:"0 18px",borderBottom:"1px solid #E2E0D6",overflowX:"auto"}}>
-        {subs.map(function(st){var a=sub===st.id;var tc=st.c||"#16a34a";return <button key={st.id} onClick={function(e){e.stopPropagation();setSub(st.id)}} style={{padding:"8px 14px",border:"none",background:a?"rgba(22,163,74,0.06)":"transparent",borderBottom:a?"2px solid "+tc:"2px solid transparent",color:a?tc:"#9c9789",fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,whiteSpace:"nowrap"}}>{st.l}<span style={{fontSize:10,fontFamily:"monospace",opacity:0.8}}>{st.ct}</span></button>;})}</div>
+      {isFull&&subs&&<div style={{display:"flex",gap:0,padding:"0 18px",borderBottom:"1px solid #E2E0D6",overflowX:"auto"}}>
+        {subs.map(function(st){var a=sub===st.id;return <button key={st.id} onClick={function(e){e.stopPropagation();setSub(st.id)}} style={{padding:"8px 14px",border:"none",background:a?"rgba(22,163,74,0.06)":"transparent",borderBottom:a?"2px solid #16a34a":"2px solid transparent",color:a?"#16a34a":"#9c9789",fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,whiteSpace:"nowrap"}}>{st.l}<span style={{fontSize:10,fontFamily:"monospace",opacity:0.8}}>{st.ct}</span></button>;})}</div>}
       <div style={{padding:"8px 18px 14px 38px",maxHeight:500,overflowY:"auto"}}><TList tasks={vis} pid={p.pid}/></div></div>}</div>;}
 
 function FCard(props){var m=props.meeting;
@@ -248,7 +253,7 @@ function FCard(props){var m=props.meeting;
       {m.actions.map(function(a,i){return <div key={i} style={{display:"flex",gap:8,padding:"4px 0",fontSize:13,color:"#1a1a1a"}}><span style={{color:"#16a34a",flexShrink:0}}>&#8226;</span><span>{a}</span></div>;})}</div>}</div>;}
 
 function PMRow(props){var d=props.data;
-  var cols=[{v:d.projects,l:"projects",c:"#1a1a1a"},{v:d.atRisk,l:"at risk",c:d.atRisk>0?"#dc2626":"#16a34a"},{v:d.stuckTasks,l:"stuck",c:d.stuckTasks>0?"#dc2626":"#9c9789"},{v:d.done7d,l:"done 7d",c:"#16a34a"},{v:d.upcoming,l:"upcoming",c:d.upcoming>0?"#7c3aed":"#9c9789"}];
+  var cols=[{v:d.projects,l:"projects",c:"#1a1a1a"},{v:d.atRisk,l:"at risk",c:d.atRisk>0?"#d97706":"#16a34a"},{v:d.stuckTasks,l:"stuck",c:d.stuckTasks>0?"#d97706":"#9c9789"},{v:d.done7d,l:"done 7d",c:"#16a34a"},{v:d.upcoming,l:"upcoming",c:d.upcoming>0?"#1a1a1a":"#9c9789"}];
   return <div style={{display:"flex",alignItems:"center",gap:16,padding:"14px 18px",background:"#ffffff",border:"1px solid #E2E0D6",borderRadius:16,marginBottom:10,borderLeft:"4px solid #55F5A3",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}>
     <div style={{flex:1}}><div style={{color:"#1a1a1a",fontSize:14,fontWeight:600}}>{props.name}</div></div>
     {cols.map(function(col,i){return <div key={i} style={{textAlign:"center",minWidth:55}}><div style={{color:col.c,fontSize:18,fontWeight:700,fontFamily:"monospace"}}>{col.v}</div><div style={{color:"#78756d",fontSize:10}}>{col.l}</div></div>;})}</div>;}
@@ -296,16 +301,16 @@ export default function Dashboard(){
     <div style={{padding:"24px 32px",maxWidth:1200,margin:"0 auto"}}>
       <div style={{display:"flex",gap:14,marginBottom:24,flexWrap:"wrap",position:"relative"}}><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.25) 0%,transparent 70%)",top:"50%",left:"25%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.2) 0%,transparent 70%)",top:"50%",left:"50%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.2) 0%,transparent 70%)",top:"50%",left:"75%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div>
         <Metric label="Active Projects" value={fp.length} sub={fp.filter(function(p){return p.status==="ON_TIME"}).length+" on time"}/>
-        <Metric label="At Risk" value={risk.length} color={risk.length>0?"#dc2626":"#16a34a"} sub={tS+" stuck tasks"}/>
+        <Metric label="At Risk" value={risk.length} color={risk.length>0?"#d97706":"#16a34a"} sub={tS+" stuck tasks"}/>
         <Metric label="Tasks Done (7d)" value={tD} color="#16a34a" sub={"across "+withDone.length+" projects"}/>
-        <Metric label="Tasks Next Week" value={tU} color="#8b5cf6" sub={"across "+withUp.length+" projects"}/></div>
+        <Metric label="Tasks Next Week" value={tU} color="#1a1a1a" sub={"across "+withUp.length+" projects"}/></div>
       <div style={{display:"flex",gap:2,marginBottom:20,borderBottom:"1px solid #E2E0D6",overflowX:"auto"}}>
         {tabs.map(function(tb){var a=tab===tb.id;return <button key={tb.id} onClick={function(){setTab(tb.id)}} style={{padding:"10px 18px",background:a?"rgba(85,245,163,0.12)":"transparent",border:"none",borderBottom:a?"2px solid #16a34a":"2px solid transparent",color:a?"#16a34a":"#9c9789",fontSize:13,fontWeight:a?700:500,cursor:"pointer",display:"flex",alignItems:"center",gap:7,whiteSpace:"nowrap",flexShrink:0,transition:"all 0.15s ease"}}>{tb.label}{tb.count!==undefined&&<span style={{background:a?"rgba(22,163,74,0.12)":"rgba(0,0,0,0.04)",padding:"2px 8px",borderRadius:10,fontSize:11,fontFamily:"monospace",fontWeight:600}}>{tb.count}</span>}</button>;})}</div>
 
       {tab==="team"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 16px 0"}}>Per-PM breakdown. Click project names to open in GuideCX.</p>{Object.entries(byPM).sort(function(a,b){return b[1].atRisk-a[1].atRisk}).map(function(e){return <PMRow key={e[0]} name={e[0]} data={e[1]}/>;})}</div>}
-      {tab==="risk"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>Projects with Late status or stuck/overdue tasks. Click any task to open in GuideCX.</p>{risk.length===0?<div style={{textAlign:"center",padding:48,color:"#16a34a",fontSize:14}}>All clear.</div>:risk.sort(function(a,b){return(b.stuck.length+b.wip.length)-(a.stuck.length+a.wip.length)}).map(function(p){return <PCard key={p.id} proj={p} initTab="stuck" startOpen={true}/>;})}</div>}
-      {tab==="done"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>Tasks completed in the last 7 days.</p>{withDone.length===0?<div style={{textAlign:"center",padding:48,color:"#78756d",fontSize:14}}>No completed tasks.</div>:withDone.sort(function(a,b){return b.done.length-a.done.length}).map(function(p){return <PCard key={p.id} proj={p} initTab="done" startOpen={true}/>;})}</div>}
-      {tab==="up"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>Tasks due in the next 7 days. Click any task to jump to GuideCX.</p>{withUp.length===0?<div style={{textAlign:"center",padding:48,color:"#78756d",fontSize:14}}>No upcoming tasks.</div>:withUp.sort(function(a,b){return b.up.length-a.up.length}).map(function(p){return <PCard key={p.id} proj={p} initTab="up" startOpen={true}/>;})}</div>}
+      {tab==="risk"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>Stuck and overdue tasks. Click any task to open in GuideCX.</p>{risk.length===0?<div style={{textAlign:"center",padding:48,color:"#16a34a",fontSize:14}}>All clear.</div>:risk.sort(function(a,b){return(b.stuck.length+b.wip.filter(isOD).length)-(a.stuck.length+a.wip.filter(isOD).length)}).map(function(p){return <PCard key={p.id} proj={p} mode="risk" startOpen={true}/>;})}</div>}
+      {tab==="done"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>Tasks completed in the last 7 days.</p>{withDone.length===0?<div style={{textAlign:"center",padding:48,color:"#78756d",fontSize:14}}>No completed tasks.</div>:withDone.sort(function(a,b){return b.done.length-a.done.length}).map(function(p){return <PCard key={p.id} proj={p} mode="done" startOpen={true}/>;})}</div>}
+      {tab==="up"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>Tasks due in the next 7 days. Click any task to jump to GuideCX.</p>{withUp.length===0?<div style={{textAlign:"center",padding:48,color:"#78756d",fontSize:14}}>No upcoming tasks.</div>:withUp.sort(function(a,b){return b.up.length-a.up.length}).map(function(p){return <PCard key={p.id} proj={p} mode="up" startOpen={true}/>;})}</div>}
       {tab==="fathom"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>Fathom recordings from the last 14 days.</p>{meetings.length===0?<div style={{textAlign:"center",padding:48,color:"#78756d",fontSize:14}}>No meetings.</div>:meetings.map(function(m){return <FCard key={m.id} meeting={m}/>;})}</div>}
       {tab==="all"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>All {fp.length} active projects. Click project or task names to open in GuideCX.</p>{fp.map(function(p){return <PCard key={p.id} proj={p} initTab="all"/>;})}</div>}
     </div></div>;}
