@@ -244,5 +244,5 @@ export async function GET() {
   }
 }
 
-// Cache: revalidate every 10 minutes
-export const revalidate = 600;
+// Force dynamic rendering - every request fetches fresh data from GCX
+export const dynamic = "force-dynamic";
