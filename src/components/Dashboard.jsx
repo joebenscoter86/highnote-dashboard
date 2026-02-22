@@ -111,6 +111,7 @@ function PMRow(props){var d=props.data;
 export default function Dashboard(){
   var _t=useState("team"),tab=_t[0],setTab=_t[1];
   var _p=useState("all"),pmFilter=_p[0],setPmFilter=_p[1];
+  var _pf=useState("all"),projFilter=_pf[0],setProjFilter=_pf[1];
   var _d=useState([]),projects=_d[0],setProjects=_d[1];
   var _ms=useState({}),msMap=_ms[0],setMsMap=_ms[1];
   var _l=useState(true),loading=_l[0],setLoading=_l[1];
@@ -130,14 +131,15 @@ export default function Dashboard(){
   var pms=useMemo(function(){var s={};projects.forEach(function(p){s[p.pm]=1;});return Object.keys(s).sort();},[projects]);
   var byPM=useMemo(function(){var m={};projects.forEach(function(p){if(!m[p.pm])m[p.pm]={projects:0,atRisk:0,stuckTasks:0,done7d:0,upcoming:0};m[p.pm].projects++;if(p.status==="LATE"||p.status==="ON_HOLD"||p.stuck.length>0||(p.risk||[]).length>0)m[p.pm].atRisk++;m[p.pm].stuckTasks+=p.stuck.length;m[p.pm].done7d+=p.done.length;m[p.pm].upcoming+=p.up.length;});return m;},[projects]);
   var fp=pmFilter==="all"?projects:projects.filter(function(p){return p.pm===pmFilter;});
-  var risk=fp.filter(function(p){return p.status==="LATE"||p.status==="ON_HOLD"||p.stuck.length>0||(p.risk||[]).length>0;});
-  var withDone=fp.filter(function(p){return p.done.length>0;});
-  var withUp=fp.filter(function(p){return p.up.length>0;});
-  var tD=fp.reduce(function(s,p){return s+p.done.length;},0);
-  var tS=fp.reduce(function(s,p){return s+p.stuck.length;},0);
-  var tU=fp.reduce(function(s,p){return s+p.up.length;},0);
+  var sp=projFilter==="all"?fp:fp.filter(function(p){return p.id===projFilter;});
+  var risk=sp.filter(function(p){return p.status==="LATE"||p.status==="ON_HOLD"||p.stuck.length>0||(p.risk||[]).length>0;});
+  var withDone=sp.filter(function(p){return p.done.length>0;});
+  var withUp=sp.filter(function(p){return p.up.length>0;});
+  var tD=sp.reduce(function(s,p){return s+p.done.length;},0);
+  var tS=sp.reduce(function(s,p){return s+p.stuck.length;},0);
+  var tU=sp.reduce(function(s,p){return s+p.up.length;},0);
   var meetings=pmFilter==="all"?FT:FT.filter(function(m){return m.pm===pmFilter;});
-  var tabs=[{id:"team",label:"Team Overview"},{id:"risk",label:"At Risk",count:risk.length},{id:"done",label:"Last 7 Days",count:tD},{id:"up",label:"Next Week",count:tU},{id:"fathom",label:"Meetings",count:meetings.length},{id:"all",label:"All Projects",count:fp.length}];
+  var tabs=[{id:"team",label:"Team Overview"},{id:"risk",label:"At Risk",count:risk.length},{id:"done",label:"Last 7 Days",count:tD},{id:"up",label:"Next Week",count:tU},{id:"fathom",label:"Meetings",count:meetings.length},{id:"all",label:"All Projects",count:sp.length}];
 
   return <div style={{minHeight:"100vh",background:"#F5F3EB",fontFamily:"'Helvetica Neue', Helvetica, system-ui, sans-serif",color:"#1a1a1a"}}>
     <div style={{height:3,background:"linear-gradient(90deg,#55F5A3,#00FFF0 50%,#55F5A3)"}}/>
@@ -147,13 +149,27 @@ export default function Dashboard(){
         {fetchedAt&&<span style={{color:"#9c9789",fontSize:10}}>Updated {new Date(fetchedAt).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}</span>}
         {loading&&<span style={{color:"#55F5A3",fontSize:11,fontWeight:600}}>Loading...</span>}
         <button onClick={function(){loadData(true);}} disabled={loading} style={{padding:"5px 10px",background:loading?"#f0ede5":"#ffffff",border:"1px solid #E2E0D6",borderRadius:8,color:loading?"#9c9789":"#1a1a1a",fontSize:11,cursor:loading?"default":"pointer",outline:"none",fontWeight:500}}>Refresh</button>
-        <select value={pmFilter} onChange={function(e){setPmFilter(e.target.value)}} style={{padding:"6px 12px",background:"#ffffff",border:"1px solid #E2E0D6",borderRadius:8,color:"#1a1a1a",fontSize:12,cursor:"pointer",outline:"none"}}><option value="all">All PMs</option>{pms.map(function(pm){return <option key={pm} value={pm}>{pm}</option>})}</select></div></div>
+        <select value={pmFilter} onChange={function(e){setPmFilter(e.target.value);setProjFilter("all");}} style={{padding:"6px 12px",background:"#ffffff",border:"1px solid #E2E0D6",borderRadius:8,color:"#1a1a1a",fontSize:12,cursor:"pointer",outline:"none"}}><option value="all">All PMs</option>{pms.map(function(pm){return <option key={pm} value={pm}>{pm}</option>})}</select>
+        <select value={projFilter} onChange={function(e){setProjFilter(e.target.value)}} style={{padding:"6px 12px",background:"#ffffff",border:"1px solid #E2E0D6",borderRadius:8,color:"#1a1a1a",fontSize:12,cursor:"pointer",outline:"none"}}><option value="all">All Projects</option>{fp.map(function(p){return <option key={p.id} value={p.id}>{p.name}</option>})}</select></div></div>
     <div style={{padding:"24px 32px",maxWidth:1200,margin:"0 auto"}}>
       <div style={{display:"flex",gap:14,marginBottom:24,flexWrap:"wrap",position:"relative"}}><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.25) 0%,transparent 70%)",top:"50%",left:"25%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.2) 0%,transparent 70%)",top:"50%",left:"50%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.2) 0%,transparent 70%)",top:"50%",left:"75%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div>
-        <Metric label="Active Projects" value={fp.length} sub={fp.filter(function(p){return p.status==="ON_TIME"}).length+" on time"}/>
+        <Metric label="Active Projects" value={sp.length} sub={sp.filter(function(p){return p.status==="ON_TIME"}).length+" on time"}/>
         <Metric label="At Risk" value={risk.length} color={risk.length>0?"#d97706":"#16a34a"} sub={tS+" stuck tasks"}/>
         <Metric label="Tasks Done (7d)" value={tD} color="#16a34a" sub={"across "+withDone.length+" projects"}/>
         <Metric label="Tasks Next Week" value={tU} color="#1a1a1a" sub={"across "+withUp.length+" projects"}/></div>
+      {projFilter!=="all"&&sp.length>0?function(){var p=sp[0];var rsk=(p.risk||[]);var stuckTasks=p.stuck;var riskTasks=rsk;var wipTasks=p.wip;var upTasks=p.up;var doneTasks=p.done;var atRiskTasks=[].concat(stuckTasks,riskTasks);var pUrl=projUrl(p.pid);var sections=[{id:"risk",label:"At Risk",tasks:atRiskTasks,color:"#dc2626"},{id:"wip",label:"In Progress",tasks:wipTasks,color:"#1a1a1a"},{id:"up",label:"Upcoming",tasks:upTasks,color:"#1a1a1a"},{id:"done",label:"Done (Last 7 Days)",tasks:doneTasks,color:"#16a34a"}].filter(function(s){return s.tasks.length>0;});return <div>
+        <div style={{background:"#ffffff",border:"1px solid #E2E0D6",borderRadius:16,padding:"20px 24px",marginBottom:20,borderLeft:"4px solid "+(SC[p.status]||"#16a34a"),boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}>
+          <div style={{display:"flex",alignItems:"center",gap:12}}>
+            <div style={{flex:1}}>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>{pUrl?<a href={pUrl} target="_blank" rel="noopener noreferrer" style={{color:"#1a1a1a",fontSize:18,fontWeight:700,textDecoration:"none"}} onMouseEnter={function(e){e.currentTarget.style.color="#16a34a";e.currentTarget.style.textDecoration="underline"}} onMouseLeave={function(e){e.currentTarget.style.color="#1a1a1a";e.currentTarget.style.textDecoration="none"}}>{p.name}<ExtIcon color="#16a34a" size={12}/></a>:<span style={{fontSize:18,fontWeight:700}}>{p.name}</span>}
+                <Badge label={SL[p.status]||p.status} c={SC[p.status]||"#6b7280"}/></div>
+              <div style={{color:"#78756d",fontSize:12,marginTop:4}}>PM: {p.pm}</div></div></div></div>
+        {sections.length===0?<div style={{textAlign:"center",padding:48,color:"#78756d",fontSize:14}}>No tasks to display.</div>:sections.map(function(sec){return <div key={sec.id} style={{background:"#ffffff",border:"1px solid #E2E0D6",borderRadius:16,marginBottom:14,overflow:"hidden",boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}}>
+          <div style={{padding:"12px 18px",borderBottom:"1px solid #E2E0D6",display:"flex",alignItems:"center",gap:8}}>
+            <span style={{color:sec.color,fontSize:11,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase"}}>{sec.label}</span>
+            <span style={{fontSize:11,fontFamily:"monospace",color:"#78756d",fontWeight:600}}>{sec.tasks.length}</span></div>
+          <div style={{padding:"8px 18px 14px 18px"}}><TList tasks={sec.tasks} pid={p.pid}/></div></div>;})}</div>;}()
+      :<div>
       <div style={{display:"flex",gap:2,marginBottom:20,borderBottom:"1px solid #E2E0D6",overflowX:"auto"}}>
         {tabs.map(function(tb){var a=tab===tb.id;return <button key={tb.id} onClick={function(){setTab(tb.id)}} style={{padding:"10px 18px",background:a?"rgba(85,245,163,0.12)":"transparent",border:"none",borderBottom:a?"2px solid #16a34a":"2px solid transparent",color:a?"#16a34a":"#9c9789",fontSize:13,fontWeight:a?700:500,cursor:"pointer",display:"flex",alignItems:"center",gap:7,whiteSpace:"nowrap",flexShrink:0,transition:"all 0.15s ease"}}>{tb.label}{tb.count!==undefined&&<span style={{background:a?"rgba(22,163,74,0.12)":"rgba(0,0,0,0.04)",padding:"2px 8px",borderRadius:10,fontSize:11,fontFamily:"monospace",fontWeight:600}}>{tb.count}</span>}</button>;})}</div>
 
@@ -162,5 +178,6 @@ export default function Dashboard(){
       {tab==="done"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>Tasks completed in the last 7 days.</p>{withDone.length===0?<div style={{textAlign:"center",padding:48,color:"#78756d",fontSize:14}}>No completed tasks.</div>:withDone.sort(function(a,b){return b.done.length-a.done.length}).map(function(p){return <PCard key={p.id} proj={p} mode="done" startOpen={true}/>;})}</div>}
       {tab==="up"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>Tasks due in the next 7 days. Click any task to jump to GuideCX.</p>{withUp.length===0?<div style={{textAlign:"center",padding:48,color:"#78756d",fontSize:14}}>No upcoming tasks.</div>:withUp.sort(function(a,b){return b.up.length-a.up.length}).map(function(p){return <PCard key={p.id} proj={p} mode="up" startOpen={true}/>;})}</div>}
       {tab==="fathom"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>Fathom recordings from the last 14 days.</p>{meetings.length===0?<div style={{textAlign:"center",padding:48,color:"#78756d",fontSize:14}}>No meetings.</div>:meetings.map(function(m){return <FCard key={m.id} meeting={m}/>;})}</div>}
-      {tab==="all"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>All {fp.length} active projects. Click project or task names to open in GuideCX.</p>{fp.map(function(p){return <PCard key={p.id} proj={p} initTab="all"/>;})}</div>}
+      {tab==="all"&&<div><p style={{color:"#9c9789",fontSize:13,margin:"0 0 14px 0"}}>All {sp.length} active projects. Click project or task names to open in GuideCX.</p>{sp.map(function(p){return <PCard key={p.id} proj={p} initTab="all"/>;})}</div>}
+      </div>}
     </div></div>;}
