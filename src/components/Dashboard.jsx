@@ -4,164 +4,6 @@ import { useState, useMemo, useEffect } from "react";
 
 // GCX base URL for deep links
 var GCX="https://highnote.guidecx.com/app/projects/";
-var MS={
-  "7cfa08d5-1dea-41aa-8425-b1c2ed032a83":{
-    "MC Preparation":"c6206138-1fc6-46ba-a5ac-05b981723c97",
-    "Mastercard Preparation":"c6206138-1fc6-46ba-a5ac-05b981723c97",
-    "NEX Preparation":"bbcb3110-b06b-43d8-8280-70612f125699",
-    "Ops Prep":"6dfe98b2-a3b2-4114-8b2e-09d16d7a08f2",
-    "Phase 1":"41a7a34a-ec59-43e7-a0e1-2b5c64778dc9",
-  },
-  "e99c8ce5-ad35-4a8a-92ea-41d9414ba7c1":{
-    "Digital Wallet Cards":"f23f4a1f-f775-452a-b8d1-c5483a4dc784",
-    "Collateral and Policies":"9e049149-cd3b-408a-a3ef-358f4c17d4ac",
-    "System Configuration":"589625a4-f584-4236-b609-b4ba4a614667",
-    "Testing":"375703d8-9a04-4aad-94df-bc8f7962a704",
-    "Launch Readiness":"6705c818-b2cc-42d5-a995-de16ca6c0a20",
-    "CRB":"98d799d2-2aed-4f52-ae8a-8bbadc6e0b19",
-  },
-  "48cfccd4-15fc-42b0-bc19-ea05970be555":{
-    "CRB":"ceafbdfc-ea04-4b3a-b460-25d712abf312",
-    "Testing":"6ff4a881-f3c1-41a2-a350-0dcd6332d079",
-    "Launch Readiness":"7dcac8b6-183a-483e-89f3-6826d8f9ad27",
-    "Policies and Procedures":"cb7686dc-d91d-4279-8f67-ad9430f402fd",
-  },
-  "86e695c2-855b-4ebf-be32-ba789f10ac70":{
-    "Policies and Procedures":"65cc0dda-bcfa-49c6-9234-2cdfbe8c4ed0",
-    "Program Collateral":"bf8d4ea4-0afd-4646-b620-3ae0c50d1eaf",
-    "Technical Implementation":"71657126-3471-415b-b028-28ca23533adc",
-    "Transpecos Bank":"5fff491a-8482-45b2-9f9f-85b791686d5a",
-  },
-  "378d9053-f82c-49ee-b11f-abe4ef9af528":{
-    "Network Onboarding":"ea777102-b85a-4aea-bb6f-d9b9405caafe",
-    "Pre-Implementation":"1e84b508-ee4a-4cab-8fd8-67dac295931d",
-    "Payment Operations":"bf152475-dea4-42c3-bbb6-fe73c679c894",
-    "Engineering":"c9867ebf-6bd4-49f8-adb2-0f23bc3dde42",
-  },
-  "c8401a72-655b-4093-b9fc-dc42947ea528":{
-    "Testing":"a7a69443-e1f6-46cf-8b97-02b07992bf5a",
-    "Post Sales":"6b61b145-2776-4588-afce-e25223c0a309",
-    "Celtic":"3818b292-504e-4e7a-b6e4-f70ef0c859de",
-  },
-  "04b6574e-9173-4f61-b706-988798ace2dd":{
-    "CRB":"52adc854-e4c9-4266-bc63-33beafc80cc1",
-    "Consumer Credit":"47b7780a-7f21-4e10-8dc0-18feb14f7a8a",
-    "Post Sales":"c80c5032-f872-473d-9744-ec155db2eecf",
-    "Program Collateral":"9356c773-5526-41fb-8766-c7ff33a1ba70",
-    "System Configuration":"56c2f9b2-df8c-4c04-8d12-bfcc0e1190c6",
-    "Testing":"9ba6f546-38fa-47c9-b401-c6e0e44be998",
-    "Tag Physical Cards":"0c9b3280-4f19-44a6-839a-c3c92b3dba12",
-    "Technical Implementation":"0e239dd7-e59a-4e68-b98b-b818f8133b73",
-  },
-  "60a6c258-954c-45ee-8878-bba6542eefe1":{
-    "CRB":"7234d079-5d79-4a3b-ad48-a8a52c905dcf",
-    "Policies and Procedures":"0ef471e9-51e0-4e72-9628-5c5b814488f7",
-    "System Configuration":"6a17edd3-ba0b-4234-896a-b3d8656cb68e",
-    "Program Collateral":"a3cc8c1e-7562-4217-b4a9-db610fab1dd8",
-  },
-  "ecfd472d-f7ef-4863-86be-71d1d5e9bdff":{
-    "Post Sales":"8803354e-5ed5-46f6-90d5-c902800edb34",
-    "CRB":"44376307-5a13-4cb6-9efc-87afd286ae16",
-    "Due Diligence":"792b5dad-3a51-416d-93d5-95d0f1ec3180",
-    "System Configuration":"3cb00ad9-ec33-4770-a740-d5df726b6c36",
-    "Technical Implementation":"2ff20d19-f59b-4650-81cd-dc36d67c5f58",
-    "Launch Readiness":"476b5854-b937-4f92-877d-bdd0c603d926",
-    "Testing":"f6655907-97c0-42c0-b0b6-7773cae769e6",
-    "Program Collateral":"be07e3ad-493f-4b97-bed1-38beb25322bb",
-    "Policies and Procedures":"c476648d-61f8-4be1-970b-5d8af6febc01",
-  },
-  "69d2416f-7537-4062-80d8-b937f204c4bc":{
-    "Due Diligence":"506c52bc-6472-456e-8c44-017d7a4b556e",
-    "Post Sales":"b449c533-0e5b-4ae4-bd34-19295b58e526",
-    "Kickoff":"67441178-b46a-4647-a1ba-bf0ee08fd732",
-    "Onboarding":"08c49a04-1ff9-42fd-bfcf-6a34a4fccc78",
-  },
-  "9e2b0067-dfc2-430a-8318-a6b0f7567bb2":{
-    "Post Sales":"0930917e-4ac2-4fe7-b211-f1da5bd8469d",
-    "Due Diligence":"3bec2b9d-0f7d-4f0f-8dc9-7d7df653bfe8",
-    "CRB":"460ccea7-8e52-4a9e-869f-d51725a9a001",
-    "Technical Implementation":"bb8a96e0-34be-4c64-836f-68152146c28f",
-    "Launch Readiness":"0270345e-cd2d-4541-b47d-ca03dc9752d8",
-    "Policies and Procedures":"405b8e36-1c00-439d-9713-7f006c163217",
-    "System Configuration":"fb8b9653-5cec-43b4-be0b-1db77bc5061f",
-    "Testing":"1c25e4f3-20eb-4f55-bceb-71626a4dac18",
-  },
-};
-
-// Task builder: n=name, r=resp, s=status, x=extras (m=milestone, a=assignee, due/date, tid=taskId)
-var T=function(n,r,s,x){return Object.assign({n:n,r:{I:"INTERNAL",C:"CUSTOMER",T:"THIRD_PARTY",M:"MIXED"}[r||"I"]||"INTERNAL",s:s},x||{});};
-
-var P=[
-{id:"mc",name:"Mastercard Cloud Edge",status:"LATE",pm:"Katie Hamm",pid:"7cfa08d5-1dea-41aa-8425-b1c2ed032a83",done:[],stuck:[],
-  risk:[T("Request additional MC resources","I","WORKING_ON_IT",{m:"MC Preparation",due:"overdue",tid:"8568b7a3-dc2b-4eb1-8a3f-9443bce809c5"}),T("Communicate Scope","I","WORKING_ON_IT",{m:"MC Preparation",due:"overdue",tid:"0c742736-6eed-44d8-bb02-581a9163949a"}),T("Coordination with NEX","I","WORKING_ON_IT",{m:"MC Preparation",due:"overdue",tid:"8760f214-990b-4c24-b81b-a076612e7800"}),T("Coordination with MC","I","WORKING_ON_IT",{m:"NEX Preparation",due:"overdue",tid:"7e4ab5b1-f332-4438-9550-44e74689bd3e"}),T("Communicate Scope","I","WORKING_ON_IT",{m:"NEX Preparation",due:"overdue",tid:"ce3b8ab4-d429-449e-95dc-183a26736c90"}),T("Request additional NEX resources","I","WORKING_ON_IT",{m:"NEX Preparation",due:"overdue",tid:"f31d9a9a-518d-4637-b37c-500f48e5a279"}),T("HN Project Plan sign off","I","WORKING_ON_IT",{m:"NEX Preparation",due:"overdue",tid:"6eac4495-c155-4c46-8669-363acc5cf051"}),T("Ensure NGOM/MCOM access","I","WORKING_ON_IT",{m:"Ops Prep",due:"overdue",tid:"9e48a176-58b8-4621-a978-4cb6c3c22f88"})],
-  wip:[],
-  up:[T("Cut Over ICA 32216","I","NOT_STARTED",{m:"Phase 1",due:"Feb 19",tid:"7a654233-c7b2-4ee2-a19a-f71b4343ccdc"}),T("Cut Over ICA 33097","I","NOT_STARTED",{m:"Phase 1",due:"Feb 19",tid:"236e5bea-5ee0-4507-9486-5bb508e97e66"}),T("Cut Over ICA 33291","I","NOT_STARTED",{m:"Phase 1",due:"Feb 19",tid:"cc3ece7b-3b8f-4bc2-8037-c80f2f8cf1d4"}),T("Cut Over ICA 33290","I","NOT_STARTED",{m:"Phase 1",due:"Feb 19",tid:"fbe86e37-f2b6-4721-85c8-cb43224a2562"}),T("Cut Over ICA 33289","I","NOT_STARTED",{m:"Phase 1",due:"Feb 19",tid:"d394bf39-31fe-41ca-8d57-e4cce5bfd3c0"})]},
-{id:"roadflex",name:"Roadflex",status:"LATE",pm:"Kate Murphey",pid:"e99c8ce5-ad35-4a8a-92ea-41d9414ba7c1",done:[],stuck:[],risk:[],
-  wip:[T("Submit Digital Wallet Items","I","WORKING_ON_IT",{m:"Digital Wallet Cards",a:"Kate M.",tid:"551eddb5-7ed7-409b-a35e-c160d4d20aca"}),T("Collateral Review","I","WORKING_ON_IT",{m:"Collateral and Policies",a:"Kate M.",tid:"92ef5ad5-5f13-4fac-8cf9-b1611639ca7a"})],
-  up:[T("Create Card Profile","I","NOT_STARTED",{m:"System Configuration",a:"Kate M.",due:"Feb 25",tid:"4d65fdc9-1cb3-46c6-b665-2fe6fcfe8a1c"}),T("Configure Product","I","NOT_STARTED",{m:"System Configuration",a:"Kate M.",due:"Feb 24",tid:"73bb3494-6023-483b-9b65-8e496560ae5e"}),T("System Config Complete","I","NOT_STARTED",{m:"System Configuration",a:"Jody S.",due:"Feb 25",tid:"306ac612-f678-45f0-acfb-d4e85b7d35ce"}),T("Testing approval","I","NOT_STARTED",{m:"Testing",a:"Kate M.",due:"Feb 24",tid:"bdcb82d7-fb9e-414b-8e24-b07df8a2eaba"}),T("Request test funds","I","NOT_STARTED",{m:"Testing",a:"Kate M.",due:"Feb 26",tid:"91b011b8-1bac-43fa-85af-dc3d76b738ef"}),T("Final Collateral filed","I","NOT_STARTED",{m:"Launch Readiness",a:"Kate M.",due:"Feb 23",tid:"208974a3-ab85-4139-8057-bb9ebf11d889"}),T("Final Policies filed","I","NOT_STARTED",{m:"Launch Readiness",a:"Kate M.",due:"Feb 23",tid:"00019c84-5af5-4420-b877-145b8c817dfe"}),T("CRB Board Approval","I","NOT_STARTED",{m:"CRB",a:"Kate M.",due:"Feb 23",tid:"8101ab1d-2ff5-4ae2-8d82-be8612da1b2a"}),T("CRB Monday Board","I","NOT_STARTED",{m:"CRB",a:"Kate M.",due:"Feb 23",tid:"4da48d69-72f9-4bcd-bc2c-afa5ac026b82"}),T("Bank Funds Flow","I","NOT_STARTED",{m:"CRB",a:"Kate M.",due:"Feb 25",tid:"7ff0d1d8-f724-4720-80cc-90f183335bfe"}),T("Account Opening CRB","I","NOT_STARTED",{m:"CRB",a:"Kate M.",due:"Feb 23",tid:"66f29713-6eba-4e97-a922-1bb4c0ed4106"}),T("PayOps Bank accts","I","NOT_STARTED",{m:"CRB",a:"Kate M.",due:"Feb 25",tid:"f545b943-4be4-4e13-8d5d-c736ab0c23c9"})]},
-{id:"paysurge",name:"PaySurge",status:"LATE",pm:"Mary Boomsma",pid:"",done:[T("PayOps funding","I","DONE",{date:"Jan 27"}),T("System Config","I","DONE",{date:"Feb 17"}),T("Testing Funds","I","DONE",{date:"Feb 17"})],stuck:[],risk:[],wip:[T("5 in progress","M","WORKING_ON_IT")],up:[]},
-{id:"mtl",name:"MTL Project",status:"LATE",pm:"Katie Hamm",pid:"",done:[],stuck:[],risk:[T("4 tasks (all overdue)","I","WORKING_ON_IT",{due:"overdue"})],wip:[],up:[]},
-{id:"runa",name:"Runa",status:"LATE",pm:"Joe Benscoter",pid:"",done:[T("Testing wind down","I","DONE",{date:"Feb 17"}),T("Rewards Approval","I","DONE",{date:"Feb 17"}),T("CHA update","I","DONE",{date:"Feb 17"})],stuck:[],risk:[T("1 overdue","I","WORKING_ON_IT",{due:"overdue"})],wip:[T("3 in progress","I","WORKING_ON_IT")],up:[]},
-{id:"svb",name:"SVB Implementation",status:"LATE",pm:"Katie Hamm",pid:"",done:[],stuck:[],risk:[T("2 overdue","I","WORKING_ON_IT",{due:"overdue"})],wip:[T("1 in progress","I","WORKING_ON_IT")],up:[]},
-{id:"ferry",name:"Ferry - CRB Issuing",status:"LATE",pm:"Kate Murphey",pid:"",done:[],stuck:[],risk:[],wip:[],up:[]},
-{id:"skux",name:"SKUx Disaster CR",status:"LATE",pm:"Kate Murphey",pid:"",done:[],stuck:[],risk:[T("2 overdue","I","WORKING_ON_IT",{due:"overdue"})],wip:[],up:[]},
-{id:"splitit",name:"SplitIt - Acquiring",status:"LATE",pm:"Kate Murphey",pid:"",done:[],stuck:[],risk:[T("1 overdue","I","WORKING_ON_IT",{due:"overdue"})],wip:[],up:[]},
-{id:"fillip",name:"Fillip Fleet",status:"LATE",pm:"Kate Murphey",pid:"48cfccd4-15fc-42b0-bc19-ea05970be555",
-  done:[T("Assign BIN Range","I","DONE",{m:"CRB",date:"Feb 18",tid:"5ac589c2-44c4-4968-9bc7-1e1ac7234d9c"}),T("Card Proof Approved","C","DONE",{m:"CRB",date:"Feb 13",tid:"abe3d6cd-eada-4e77-8750-d4b713462bc2"}),T("Arroweye BIN Setup","I","DONE",{m:"CRB",date:"Feb 17",tid:"75f8a5b7-8399-44e1-86e3-a7bb70f5b2fc"}),T("DW Testing","C","DONE",{m:"Testing",date:"Feb 17",tid:"2fb69839-ab1a-47ee-94f6-21493325ef28"}),T("DW Live","I","DONE",{m:"Testing",date:"Feb 17",tid:"5776fffe-c6ae-41f7-bbea-71b95ad91688"})],
-  stuck:[],
-  risk:[T("Funds Reserves","C","WORKING_ON_IT",{m:"Testing",due:"Feb 10 !!",tid:"06593427-ac5c-4d20-91f6-94c813646704"}),T("Card Vendor Setup","I","WORKING_ON_IT",{m:"CRB",a:"Kate M.",due:"Feb 18 !!",tid:"aa9f62c2-0a91-4018-acad-0f2f4f0fde89"}),T("Spend/Velocity Rules","I","WORKING_ON_IT",{m:"Launch Readiness",a:"Kate M.",due:"Feb 19 !!",tid:"89ed0c8b-878b-4157-a088-76ec45c37b65"}),T("Finalize Collateral","I","WORKING_ON_IT",{m:"Policies and Procedures",a:"Garrett A.",due:"Feb 13 !!",tid:"3dcc9e7f-9712-4f28-a0a3-ce237ca90fc6"}),T("Fast-Track Approval","I","WORKING_ON_IT",{m:"CRB",a:"Kate M.",due:"Feb 5 !!",tid:"74d103a0-030c-4c47-b65c-ba07c39f389d"})],
-  wip:[],
-  up:[T("Configure ZD","I","NOT_STARTED",{m:"Launch Readiness",a:"Marlo K.",due:"Feb 25",tid:"9099843a-8bd0-4d66-8fd8-2a1de696ee3f"}),T("Review Disputes","I","NOT_STARTED",{m:"Launch Readiness",a:"Kate M.",due:"Feb 20",tid:"209c1dd8-b96b-479c-89f7-e4db3f878e69"}),T("Disputes Email","I","NOT_STARTED",{m:"Launch Readiness",due:"Feb 25",tid:"3e7816fe-97d2-42b5-afe8-c499bcabe6eb"}),T("Physical Cards Testing","C","NOT_STARTED",{m:"Testing",due:"Feb 25",tid:"b644a99f-13b6-4702-bc37-3a9ecf4dbd2f"})]},
-{id:"accessfares",name:"AccessFares (Zyzza)",status:"ON_TIME",pm:"Kate Murphey",pid:"",done:[],stuck:[],risk:[T("1 overdue","M","WORKING_ON_IT",{due:"overdue"})],wip:[T("6 in progress","M","WORKING_ON_IT")],up:[T("Statements/Txn","C","NOT_STARTED",{a:"Mike B.",due:"Feb 20"})]},
-{id:"apmex",name:"APMEX",status:"ON_TIME",pm:"Joe Benscoter",pid:"86e695c2-855b-4ebf-be32-ba789f10ac70",
-  done:[T("Impl Kickoff","I","DONE",{m:"Technical Implementation",date:"Feb 17",tid:"46594e0c-946a-4dc0-b360-c0a708e14508"}),T("Physical Card","I","DONE",{m:"Technical Implementation",date:"Feb 17",tid:"ca602e58-872d-434e-b949-13c4f5aec462"})],
-  stuck:[T("BIN Request","I","STUCK",{m:"Transpecos Bank",a:"Aditya A.",tid:"f05d7873-1913-4e27-bc8c-65df2ca986e2"})],
-  risk:[T("CMS Policy","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Feb 5 !!",tid:"c574982b-baf8-4635-a5d8-aa687826cd67"}),T("Reg E/EFTA","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Jan 22 !!",tid:"4e2f0de8-d00a-4498-86f4-c028435d466d"}),T("Social Media","I","WORKING_ON_IT",{m:"Policies and Procedures",due:"Feb 5 !!",tid:"6ee3f293-af4a-4a69-ba96-32730848b7d9"}),T("KYB/CIP","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Feb 5 !!",tid:"731aa0cb-c816-4936-b499-0061e352a06f"}),T("Info Security","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Feb 5 !!",tid:"165da3cc-4813-4569-af78-0be2ec9b89b7"}),T("Cust Service","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Dec 31 !!",tid:"fbf576a3-1184-463b-917c-7d0cbd1c00c3"}),T("Change Mgmt","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Feb 5 !!",tid:"7a0225ae-ff7d-4fb7-9411-79482c472afb"}),T("Compliance Training","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Feb 5 !!",tid:"be4a0d9d-8d24-4498-b423-9b87551fedb5"}),T("Vendor Mgmt","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Jan 22 !!",tid:"804749b6-2091-4dbe-979e-066149aa6732"}),T("Ad/Marketing","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Feb 5 !!",tid:"c4c18dd6-2c49-48e2-93da-69de67d77afb"}),T("Complaints","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Feb 5 !!",tid:"1bbfbb8e-d0d5-4c4d-9de8-b16665233541"}),T("BSA/AML/OFAC","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Feb 5 !!",tid:"571ec395-1293-46aa-93f5-41f473a6258c"}),T("Red Flags","C","WORKING_ON_IT",{m:"Policies and Procedures",due:"Feb 5 !!",tid:"95e1578b-1d70-4c13-aadc-cbace41916ae"}),T("Submit Bank Package","I","WORKING_ON_IT",{m:"Transpecos Bank",a:"Joe B.",due:"Feb 11 !!",tid:"87a000c3-2794-41c5-bea3-93a06b6b03b3"})],
-  wip:[T("Mobile App Screens","C","WORKING_ON_IT",{m:"Program Collateral",tid:"fd455f0c-17ec-458d-b641-fe03f78c24da"}),T("Mobile App","I","WORKING_ON_IT",{m:"Technical Implementation",a:"Kevin R.",tid:"509ec77f-50f7-43e9-bb33-828882e311b2"}),T("Push Provisioning","I","WORKING_ON_IT",{m:"Technical Implementation",a:"Kevin R.",tid:"b115833b-5583-44d7-a33a-cc69bcba4249"})],
-  up:[T("DW Assets","C","NOT_STARTED",{m:"Program Collateral",due:"Feb 19",tid:"c301e733-99d3-4bd6-848a-bbc06e9bddcf"}),T("Card Carrier","C","NOT_STARTED",{m:"Program Collateral",due:"Feb 19",tid:"a659ab79-a3cd-4cc0-bd74-8c5993cb3d53"}),T("Marketing Materials","C","NOT_STARTED",{m:"Program Collateral",due:"Feb 24",tid:"dbe62700-a6b2-4580-92dc-af92f9a19764"}),T("Open Bank Accts","I","NOT_STARTED",{m:"Transpecos Bank",a:"Joe B.",due:"Feb 19",tid:"a4913eb3-9381-49ba-856f-45dabdb930b7"}),T("PayOps Bank accts","I","NOT_STARTED",{m:"Transpecos Bank",due:"Feb 19",tid:"85b4cafb-08dc-46e0-99bb-fdb319e32a16"}),T("Funding instructions","I","NOT_STARTED",{m:"Transpecos Bank",a:"Joe B.",due:"Feb 19",tid:"5b995a4e-ef13-417b-8bdd-89de4461ebce"})]},
-{id:"transpecos",name:"Transpecos Program",status:"LATE",pm:"Katie Hamm",pid:"378d9053-f82c-49ee-b11f-abe4ef9af528",done:[],stuck:[],
-  risk:[T("CRISP keys ticket","I","WORKING_ON_IT",{m:"Network Onboarding",a:"Will H.",due:"Feb 19 !!",tid:"68f0704d-a1e0-4949-ab8a-613a6ba366da"}),T("Weekly bank meetings","I","WORKING_ON_IT",{m:"Pre-Implementation",due:"overdue",tid:"488e758a-2dd6-4d1e-ae7b-8527da23064c"})],
-  wip:[],
-  up:[T("Admin for Bank accts","I","NOT_STARTED",{m:"Payment Operations",due:"Feb 19",tid:"16d876c3-7365-486d-84c5-71e59f1e6ee9"}),T("Final funds flow","I","NOT_STARTED",{m:"Payment Operations",due:"Feb 20",tid:"7f38738a-d80e-4952-9a7b-1ccd2d5cf95c"}),T("Bank Dashboard PayOps","I","NOT_STARTED",{m:"Payment Operations",due:"Feb 19",tid:"c651ec0b-189b-40fa-9644-045b54aa6e7a"}),T("Fund Reserves","I","NOT_STARTED",{m:"Payment Operations",due:"Feb 19",tid:"8698e621-3cb8-40a5-8d74-28327aa3f524"}),T("Visa Card Vendor","I","NOT_STARTED",{m:"Network Onboarding",due:"Feb 19",tid:"7268ffbd-4ec9-4ecf-b0dd-15667ab356a2"}),T("Card vendor cert","I","NOT_STARTED",{m:"Network Onboarding",due:"Feb 26",tid:"0b44d0f4-5b24-42e3-914b-a56e536a9788"}),T("Exchange keys mfg","I","NOT_STARTED",{m:"Engineering",due:"Feb 26",tid:"879347ae-c4e9-4453-8fa0-f6f401c52de2"}),T("Bank report walkthrough","I","NOT_STARTED",{m:"Engineering",due:"Feb 20",tid:"1a46c4c0-21eb-424f-9c42-a0bec0d8e65c"})]},
-{id:"lowes",name:"Lowes HELOC",status:"LATE",pm:"Mary Boomsma",pid:"c8401a72-655b-4093-b9fc-dc42947ea528",done:[],
-  stuck:[T("Reserve Statement","I","STUCK",{m:"Testing",due:"Feb 13 !!",tid:"aa84b953-93e0-4a94-beb8-33aefd847419"}),T("Funds Reserves","I","STUCK",{m:"Testing",a:"Jody S.",due:"Feb 13 !!",tid:"aa484976-c5b8-4dfc-96dd-3bacf097f6ff"})],
-  risk:[T("Pay Impl Fee","I","WORKING_ON_IT",{m:"Post Sales",a:"Mary B.",due:"Jan 30 !!",tid:"16e94846-fe1d-4c6d-ada5-9ad317eb5694"}),T("Enable ACH","I","WORKING_ON_IT",{m:"Celtic",a:"Gabe J.",due:"Feb 13 !!",tid:"d03da524-bfbb-4034-a907-0e2688a7ce71"})],wip:[],up:[]},
-{id:"collectors",name:"Collectors Card",status:"ON_TIME",pm:"Mary Boomsma",pid:"04b6574e-9173-4f61-b706-988798ace2dd",
-  done:[T("Assign BIN","I","DONE",{m:"CRB",date:"Feb 18",tid:"ba94fa8a-9d63-4cd5-8d45-d7285da21f16"}),T("Experian Kickoff","I","DONE",{m:"Consumer Credit",date:"Feb 19",tid:"6928ae7b-5a29-458d-9dee-a016d834bed6"}),T("Plaid Doc","C","DONE",{m:"System Configuration",date:"Feb 19",tid:"72bbde04-d7f1-437b-8289-b6aa888ba758"}),T("Plaid End User","I","DONE",{m:"System Configuration",date:"Feb 19",tid:"98a2ec78-417a-4e96-b92e-a9ead7509faa"}),T("Plaid Kickoff","I","DONE",{m:"System Configuration",date:"Jan 14",tid:"1cc106fc-4ba8-4acf-a0c5-b55d779f6d90"})],
-  stuck:[T("BIN Tokenization","I","STUCK",{m:"CRB",a:"Karen L.",tid:"4fdc7dbe-3053-47ed-a5c4-4f029f53faef"}),T("Pay Impl Fee","C","STUCK",{m:"Post Sales",a:"Andi H.",due:"Jan 19 !!",tid:"6438851b-7120-4ef5-89b0-cf3189ef5203"}),T("Plaid Keys","I","STUCK",{m:"System Configuration",a:"Katie H.",tid:"90f769d6-dbe6-473b-8831-4a380bef657c"})],
-  risk:[T("Scope sign off","C","WORKING_ON_IT",{m:"Post Sales",a:"Andi H.",due:"Feb 6 !!",tid:"28e25806-c355-464c-b9d9-d7156ac74dae"})],
-  wip:[T("CHA","C","WORKING_ON_IT",{m:"Program Collateral",a:"Isaiah B.",tid:"ad32ba64-5262-4a5e-b0d2-f617593e68ec"}),T("CRB Board","T","WORKING_ON_IT",{m:"CRB",tid:"0fbef5d6-c4f9-4e32-87e8-c42e8fd0fad7"}),T("Marketing","C","WORKING_ON_IT",{m:"Program Collateral",a:"Chris C.",tid:"6397c9c5-e7dd-4f96-ac1e-6b43a4c9babc"}),T("Toll Free Number","C","WORKING_ON_IT",{m:"Program Collateral",a:"Isaiah B.",tid:"c6ea9b6a-2979-4f99-879b-a912834ea6d3"}),T("Tag Integration","I","WORKING_ON_IT",{m:"CRB",a:"Katie H.",tid:"bfba5549-1a4d-4b52-8123-4ba1ac6ac19d"}),T("Doc Collection","C","WORKING_ON_IT",{m:"Consumer Credit",tid:"0f9fc56d-076c-4539-b0a7-5adc62c31351"}),T("Plaid Integration","C","WORKING_ON_IT",{m:"System Configuration",tid:"01e6c7a0-d139-44b2-b2b8-d57d6dd7eaec"}),T("Auth Request","I","WORKING_ON_IT",{m:"System Configuration",a:"Katie H.",tid:"aa4dff41-fd73-4d12-8e15-e6034fb73aad"})],
-  up:[T("Reserve Statement","I","NOT_STARTED",{m:"Testing",a:"Mary B.",due:"Feb 26",tid:"e73e7501-3e6e-4800-86cf-9cafabb56dbb"}),T("Setup Arroweye","I","NOT_STARTED",{m:"CRB",a:"Mary B.",due:"Feb 20",tid:"249bd088-a5b2-4161-a368-375bff0c69f8"}),T("Open Bank Accts","T","NOT_STARTED",{m:"CRB",due:"Feb 20",tid:"45a6c513-4110-41e2-b492-990fd58e8107"}),T("Profile Cert","I","NOT_STARTED",{m:"Tag Physical Cards",a:"Katie H.",due:"Feb 26",tid:"c77c5209-6535-4c30-8ce5-abc5a65755b5"}),T("Card Files Approved","I","NOT_STARTED",{m:"Tag Physical Cards",a:"Mary B.",due:"Feb 25",tid:"56cab0ef-9699-4456-a328-565edb078161"}),T("Tag Carrier Pre-Reqs","C","NOT_STARTED",{m:"Tag Physical Cards",due:"Feb 26",tid:"39ae60d6-7c9e-4ad4-a5c2-a32435f06caf"}),T("Carrier Mfg Quote","C","NOT_STARTED",{m:"Tag Physical Cards",due:"Feb 26",tid:"91da1820-f2f8-4246-9db5-ea5521887626"})]},
-{id:"edstruments",name:"Edstruments",status:"ON_TIME",pm:"Mary Boomsma",pid:"",done:[],stuck:[T("Wallet Tokenization","I","STUCK",{a:"Karen L."})],risk:[],wip:[],up:[]},
-{id:"pingpong",name:"PingPong AP Invoice",status:"ON_TIME",pm:"Mary Boomsma",pid:"60a6c258-954c-45ee-8878-bba6542eefe1",done:[],stuck:[],
-  risk:[T("Assign BIN","I","WORKING_ON_IT",{m:"CRB",a:"Karen L.",due:"Feb 13 !!",tid:"1995ef71-3d7a-4e67-acd4-2ed0be23c0e0"}),T("Verification WF ID","I","WORKING_ON_IT",{m:"System Configuration",a:"Mary B.",due:"Feb 13 !!",tid:"57ef0b6e-9644-4f70-80e3-fdad21727e3e"}),T("CRB Projections","I","WORKING_ON_IT",{m:"CRB",a:"Mary B.",due:"Feb 17 !!",tid:"a5bc2c83-3454-4338-8c54-3b620fe6fdd6"})],
-  wip:[T("Review Policies","I","WORKING_ON_IT",{m:"Policies and Procedures",a:"Courtney R.",tid:"f74e1b67-dd26-438a-ad23-08b27134b38b"}),T("Overview Deck","I","WORKING_ON_IT",{m:"CRB",a:"Mary B.",due:"Feb 20",tid:"065b835c-a100-4512-879d-a26de4725713"})],
-  up:[T("Virtual Card Design","C","NOT_STARTED",{m:"Program Collateral",due:"Feb 20",tid:"5e605716-52b6-40bc-a5f3-de24af1d63de"}),T("Document funds flow","I","NOT_STARTED",{m:"CRB",a:"Mary B.",due:"Feb 20",tid:"0208ef9a-cd74-4506-8267-0ea0bbd606c0"}),T("Configure Product","I","NOT_STARTED",{m:"System Configuration",a:"Mary B.",due:"Feb 24",tid:"b21932cf-ae15-4bd8-a7c1-5f23d656a884"}),T("Create Program","I","NOT_STARTED",{m:"System Configuration",a:"Mary B.",due:"Feb 20",tid:"716b5447-86e5-41c4-95db-a823e1b6b860"}),T("Risk Rules","I","NOT_STARTED",{m:"System Configuration",a:"Mary B.",due:"Feb 23",tid:"6f2ba109-2d1b-4c9f-ae48-fb8cf64bfa4a"}),T("Spend/Velocity","I","NOT_STARTED",{m:"System Configuration",a:"Mary B.",due:"Feb 23",tid:"9294dcaf-5f30-4610-81b2-72919b045ea5"})]},
-{id:"remodel",name:"Remodel Health",status:"ON_TIME",pm:"Joe Benscoter",pid:"ecfd472d-f7ef-4863-86be-71d1d5e9bdff",
-  done:[T("Solution review","I","DONE",{m:"Post Sales",date:"Feb 17",tid:"66668a84-e925-4eff-a096-54817acde913"}),T("Pay Impl Fee","C","DONE",{m:"Post Sales",date:"Feb 17",tid:"df4de2d8-15e2-49ff-af9a-60b4bdff1170"})],stuck:[],risk:[],
-  wip:[T("Assign BIN Range","I","WORKING_ON_IT",{m:"CRB",a:"Aditya A.",tid:"1470cfd1-36af-44d2-840f-f7f72b88e885"}),T("Due Diligence","I","WORKING_ON_IT",{m:"Due Diligence",a:"Courtney R.",due:"Feb 20",tid:"ac27c7bb-3a7f-41ea-839d-5af8274a6b77"})],
-  up:[T("Document funds flow","I","NOT_STARTED",{m:"CRB",a:"Joe B.",due:"Feb 23",tid:"26fe86c0-f79e-42b4-9233-e7ab3e316c9b"}),T("Enable 3DS","I","NOT_STARTED",{m:"CRB",a:"Joe B.",due:"Feb 23",tid:"36948c4b-4d4b-4b42-ae73-0e04bad6154d"}),T("Bank Account Doc","I","NOT_STARTED",{m:"CRB",a:"Joe B.",due:"Feb 20",tid:"8decff61-45ce-4cda-ab85-6ef20d2b8f1b"}),T("API Keys","I","NOT_STARTED",{m:"CRB",a:"Joe B.",due:"Feb 20",tid:"b876de8c-1bbd-424b-b086-58d9d76c49e5"}),T("CRB Projections","I","NOT_STARTED",{m:"CRB",a:"Joe B.",due:"Feb 24",tid:"861deee2-26d1-4a79-8d0b-9926ebd6d0a8"}),T("Overview Deck","I","NOT_STARTED",{m:"CRB",a:"Joe B.",due:"Feb 20",tid:"e995e255-421f-452f-8b3e-6824cf4dcc07"}),T("Prefix CRB","I","NOT_STARTED",{m:"CRB",a:"Joe B.",due:"Feb 20",tid:"1fe21966-1056-4c29-9ad8-394c91a58090"}),
-    T("Card Product/Profile","I","NOT_STARTED",{m:"System Configuration",a:"Joe B.",due:"Feb 25",tid:"ff988635-8e13-4b8c-96e1-503b67020629"}),T("Create Program","I","NOT_STARTED",{m:"System Configuration",a:"Joe B.",due:"Feb 23",tid:"354304e8-8fc2-4ea2-b000-3948b2c451c5"}),T("Config Product","I","NOT_STARTED",{m:"System Configuration",a:"Joe B.",due:"Feb 25",tid:"0869810c-9502-469c-9dfb-ef8ec18faf31"}),T("Test Product","I","NOT_STARTED",{m:"System Configuration",a:"Joe B.",due:"Feb 24",tid:"621f8154-375a-4d75-8490-e4dd0ae5d6c4"}),T("Tenant/Org","I","NOT_STARTED",{m:"System Configuration",a:"Joe B.",due:"Feb 23",tid:"cffd3b8b-a098-4567-819b-170e02095233"}),T("Verification WF ID","I","NOT_STARTED",{m:"System Configuration",a:"Joe B.",due:"Feb 19",tid:"f327106e-6c55-432a-b074-d6f8633d035e"}),T("Spend/Velocity","I","NOT_STARTED",{m:"System Configuration",a:"Joe B.",due:"Feb 24",tid:"5018ff05-cdce-4010-9c32-6295de4943a6"}),T("Risk Rules","I","NOT_STARTED",{m:"System Configuration",a:"Joe B.",due:"Feb 24",tid:"2a0a44f6-e82f-45c1-b87b-e9f2afc3288d"}),
-    T("Onboarding","I","NOT_STARTED",{m:"Technical Implementation",a:"Kevin R.",due:"Feb 19",tid:"dfdfa90d-1684-4e0f-8e89-473dbffdd40b"}),T("Statements/Txn","I","NOT_STARTED",{m:"Technical Implementation",a:"Kevin R.",due:"Feb 19",tid:"d18d03c0-c012-4f75-a301-d43879ae75d4"}),T("Funding","I","NOT_STARTED",{m:"Technical Implementation",a:"Kevin R.",due:"Feb 19",tid:"6a01e9be-6cab-48a6-b154-9da7a9d17270"}),T("Card Issuance","I","NOT_STARTED",{m:"Technical Implementation",a:"Kevin R.",due:"Feb 19",tid:"62006462-2312-4851-92bb-928811ca42c1"}),T("Disputes","I","NOT_STARTED",{m:"Technical Implementation",a:"Kevin R.",due:"Feb 19",tid:"b2bafb5e-980a-4be6-b416-ecf99b2c72a9"}),
-    T("Policies Themis","I","NOT_STARTED",{m:"Launch Readiness",a:"Joe B.",due:"Feb 23",tid:"ad9937c0-54c6-4f96-a3f6-d2c0729343c0"}),T("Sub Hub","I","NOT_STARTED",{m:"Launch Readiness",a:"Joe B.",due:"Feb 23",tid:"37ef7434-b7b8-4adc-9e7f-dba58ac49f24"}),T("Testing winddown","I","NOT_STARTED",{m:"Launch Readiness",a:"Joe B.",due:"Feb 26",tid:"c334df52-fa4a-418b-9e6a-3c18b3d6a71b"}),
-    T("Test Funds","I","NOT_STARTED",{m:"Testing",a:"Joe B.",due:"Feb 26",tid:"b15f79e5-5950-4eec-9f0c-700eae2d7ce1"}),T("Live Env access","I","NOT_STARTED",{m:"Testing",a:"Joe B.",due:"Feb 25",tid:"c3fc5b81-0a99-4259-8223-5335690f7cbd"}),T("System Config Complete","I","NOT_STARTED",{m:"Testing",a:"Jody S.",due:"Feb 25",tid:"336194bf-b086-4010-a85a-812e669d1249"}),
-    T("Scope sign off","C","NOT_STARTED",{m:"Post Sales",a:"Bill W.",due:"Feb 19",tid:"580b2990-538d-49e3-8deb-51d6f577d7f8"}),T("Virtual Card Design","C","NOT_STARTED",{m:"Program Collateral",due:"Feb 24",tid:"6afb5aa8-fd2f-41bb-8f8c-a61bd6ea2228"}),
-    T("Social Media","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"645eb232-ee92-4fa6-a9a6-bd8c61f32f25"}),T("Info Security","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"550d6434-6a73-4c43-b9f8-a130b4fa3c03"}),T("Cust Service","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"eafb13f3-ab2a-46ba-adb1-6b976ff088c3"}),T("RFPA","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"be198424-765b-44df-b4d1-2d78895e5865"}),T("Issue Mgmt","C","NOT_STARTED",{m:"Policies and Procedures",a:"Bill W.",due:"Feb 20",tid:"e663562d-00ba-46cc-a64a-652d3b88a5f0"}),T("Compliance Training","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"bdc7668f-9439-412c-8ab0-2e9ad454a3da"}),T("Doc Retention","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"4b370de5-9fa3-4b8e-abaa-bfbfd7ed28b6"}),T("Vendor Mgmt","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"201b35bd-8d2b-4498-84f0-6fc70cdc1ef0"}),T("Ad/Marketing","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"a2e7f661-fbb7-4a66-89aa-e0927a5de435"}),T("Complaints","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"4ef702b9-65fb-4c25-bb35-722cb9326fe0"}),T("E-Sign","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"5adec70d-3257-4eb2-a829-7b80d6074d99"}),T("UDAAP/UDAP","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"4fcbe6e9-04ef-46ca-bdc3-cc330116731f"}),T("BSA/AML/OFAC","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"2dbf80c1-9ca8-4d0d-ac89-28912dde1237"}),T("Privacy Policy","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"49f30b24-3f81-482c-b1ce-afc329ef0e70"}),T("BCP/DR","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"8cca5a23-1ec5-42cb-bd58-dbdeac766787"}),T("Red Flags","C","NOT_STARTED",{m:"Policies and Procedures",a:"Niki M.",due:"Feb 20",tid:"098483e1-b84d-4264-b17e-69703c5c95c6"})]},
-{id:"magellan",name:"Magellan",status:"LATE",pm:"Kate Murphey",pid:"",done:[],stuck:[],risk:[],wip:[T("1 in progress","I","WORKING_ON_IT")],up:[]},
-{id:"fluz-pcr",name:"Fluz Physical Cards",status:"ON_TIME",pm:"Katie Hamm",pid:"",done:[],stuck:[],risk:[],wip:[],up:[]},
-{id:"fluz-token",name:"Fluz Tokenization",status:"ON_TIME",pm:"Mary Boomsma",pid:"",done:[],stuck:[],risk:[],wip:[T("2 in progress","I","WORKING_ON_IT")],up:[]},
-{id:"workwhile",name:"WorkWhile",status:"ON_TIME",pm:"Mary Boomsma",pid:"69d2416f-7537-4062-80d8-b937f204c4bc",
-  done:[T("Themis Setup","I","DONE",{m:"Due Diligence",date:"Feb 17",tid:"368434ad-a37f-4285-bdbb-0ea1a1585f80"}),T("Solution Review","I","DONE",{m:"Post Sales",date:"Feb 18",tid:"c36082a6-2619-46c3-81cb-d6587f665a6b"}),T("Impl Invoice","I","DONE",{m:"Post Sales",date:"Feb 19",tid:"4732dd15-24ed-4f45-8780-7d5b51c7cc53"}),T("Host Kickoff","I","DONE",{m:"Post Sales",date:"Feb 19",tid:"1a0fcf41-2590-4828-8ced-89b6c486bba6"}),T("Schedule Kickoff","I","DONE",{m:"Kickoff",date:"Feb 19",tid:"81ea54f6-601f-4a6e-b49c-bb37eee2b631"})],
-  stuck:[],risk:[],wip:[T("Pay Impl Fee","C","WORKING_ON_IT",{m:"Post Sales",tid:"7135f879-797d-4ca2-85a0-72f39d9da9c5"})],
-  up:[T("Review sign off","I","NOT_STARTED",{m:"Post Sales",a:"Mary B.",due:"Feb 20",tid:"492e4581-a1d8-4ab8-8162-ad3f278f4005"}),T("W-9/ACH","C","NOT_STARTED",{m:"Post Sales",due:"Feb 23",tid:"49e98c80-b397-48db-a768-f467d5bc0102"}),T("Onboarding Q","C","NOT_STARTED",{m:"Due Diligence",due:"Feb 26",tid:"37a06bd2-0a69-467f-8ff5-008f921d9a6b"}),T("Themis Guide","C","NOT_STARTED",{m:"Due Diligence",due:"Feb 19",tid:"4465fb8b-b7a0-421c-993c-0983e594261e"}),T("Fee Paid","I","NOT_STARTED",{m:"Kickoff",a:"PayOps",due:"Feb 24",tid:"abab8123-fbea-424d-94b5-ba2c303e1169"}),T("Themis Intake","I","NOT_STARTED",{m:"Kickoff",due:"Feb 19",tid:"bfda5f64-aeef-40bf-a3dd-b9f9481b5f2b"}),T("Document Scope","I","NOT_STARTED",{m:"Onboarding",due:"Feb 19",tid:"e1abc4cb-27c0-45de-9632-aaa09367ce78"}),T("Custom Fields","I","NOT_STARTED",{m:"Onboarding",due:"Feb 23",tid:"602cad8a-40ed-437e-9a79-49466276180c"})]},
-{id:"coverd",name:"Coverd",status:"ON_TIME",pm:"Joe Benscoter",pid:"9e2b0067-dfc2-430a-8318-a6b0f7567bb2",
-  done:[T("W-9/ACH","C","DONE",{m:"Post Sales",date:"Feb 17",tid:"9c373225-2a24-4e6f-b0f5-36c82088a49c"}),T("Solution Review","I","DONE",{m:"Post Sales",date:"Feb 17",tid:"236615ac-369e-4979-a864-78977f26dadc"}),T("Weekly meetings","I","DONE",{m:"Post Sales",date:"Feb 17",tid:"b981e4cf-c443-4d1b-95cf-0ae092b61f65"}),T("Host Kickoff","I","DONE",{m:"Post Sales",date:"Feb 17",tid:"4a913c58-c113-483e-a346-b1cec9832310"})],
-  stuck:[],
-  risk:[T("Prepare Bank Deck","I","WORKING_ON_IT",{m:"Due Diligence",a:"Joe B.",due:"Feb 11 !!",tid:"b8e91e81-67c0-4b49-a98c-de090f9b29a5"})],
-  wip:[T("Pay Impl Fee","C","WORKING_ON_IT",{m:"Post Sales",tid:"c7ab7dbb-2087-4292-bb99-1b130b86a3f9"})],
-  up:[T("Scope sign off","C","NOT_STARTED",{m:"Post Sales",due:"Feb 20",tid:"c73f3afb-15bf-4698-a56b-431626ec3a7a"}),T("Onboarding Q","C","NOT_STARTED",{m:"Due Diligence",due:"Feb 26",tid:"38300fab-ab95-4f33-ae16-a0bf6beeeb6e"}),T("Open Bank Accts","T","NOT_STARTED",{m:"CRB",due:"Feb 23",tid:"f8b3be87-2756-4581-bc9c-8836c850d15b"}),T("Risk SDK","I","NOT_STARTED",{m:"Technical Implementation",a:"Joe B.",due:"Feb 19",tid:"3558a264-d752-4ca3-ac69-7d5f3fb66106"}),T("Disputes","C","NOT_STARTED",{m:"Technical Implementation",due:"Feb 19",tid:"74e12deb-a14e-4632-a3b8-ab3c5273eb4f"}),T("Onboarding","C","NOT_STARTED",{m:"Technical Implementation",due:"Feb 19",tid:"2be0d956-852d-4f8f-9503-f768a9410dce"}),T("Card Issuance","C","NOT_STARTED",{m:"Technical Implementation",due:"Feb 19",tid:"719defad-9d9c-4a8a-be58-acc8143ced95"}),T("Statements/Txn","C","NOT_STARTED",{m:"Technical Implementation",due:"Feb 19",tid:"e7a56fe7-9523-445c-9630-587e617ad5eb"}),T("Funding","C","NOT_STARTED",{m:"Technical Implementation",due:"Feb 19",tid:"32910ccf-93e3-490b-b7a9-698845bc580c"}),T("Sub Hub","I","NOT_STARTED",{m:"Launch Readiness",a:"Joe B.",due:"Feb 23",tid:"633be779-2d69-4b93-8cbd-39cde5af6a47"}),T("Policies Themis","I","NOT_STARTED",{m:"Launch Readiness",a:"Joe B.",due:"Feb 23",tid:"5e614b15-ea68-47d0-8a1d-1ca3495eef81"}),T("Policy Module","I","NOT_STARTED",{m:"Policies and Procedures",a:"Joe B.",due:"Feb 20",tid:"cbdd4d32-c0c2-4d24-9086-2314735ec992"}),T("Verification WF ID","I","NOT_STARTED",{m:"System Configuration",a:"Joe B.",due:"Feb 20",tid:"c3450e77-ab39-4f5c-9f49-d0e4560f0d6d"}),T("Subscriber Testing","C","NOT_STARTED",{m:"Testing",due:"Feb 23",tid:"93f353f6-f92f-4fbb-b8f7-70f55c0e74f4"})]},
-];
-
 var FT=[
   {id:"f1",title:"HN / Remodel: Sync",date:"Feb 17",pm:"Joe Benscoter",actions:["Joe: build pitch deck, submit to CRB by EOW","Remodel: begin policy submissions by Feb 20","Kevin Ruan: start API integration review"]},
   {id:"f2",title:"HN / Runa: Sync",date:"Feb 17",pm:"Joe Benscoter",actions:["Joe: confirm go-live date with sponsor bank","Runa: complete final UAT sign-off"]},
@@ -179,7 +21,7 @@ function isOD(t){return t.due&&(t.due.indexOf("!!")>=0||t.due.indexOf("overdue")
 function groupByMS(tasks){var g={},o=[];tasks.forEach(function(t){var k=t.m||null;if(!g[k]){g[k]=[];o.push(k);}g[k].push(t);});return o.map(function(k){return{ms:k,tasks:g[k]};});}
 function hasMS(tasks){return tasks.some(function(t){return t.m;});}
 // Active milestone map (updated when live data loads)
-var _activeMsMap = MS;
+var _activeMsMap = {};
 function taskUrl(pid,tid,mname){var mid=_activeMsMap&&_activeMsMap[pid]&&_activeMsMap[pid][mname]||"";return pid&&tid?GCX+pid+"/plan?edit-task=true&task-id="+tid+(mid?"&milestone-id="+mid:"")+"&task-tab=details":null;}
 function projUrl(pid){return pid?GCX+pid+"/overview":null;}
 
@@ -269,8 +111,8 @@ function PMRow(props){var d=props.data;
 export default function Dashboard(){
   var _t=useState("team"),tab=_t[0],setTab=_t[1];
   var _p=useState("all"),pmFilter=_p[0],setPmFilter=_p[1];
-  var _d=useState(P),projects=_d[0],setProjects=_d[1];
-  var _ms=useState(MS),msMap=_ms[0],setMsMap=_ms[1];
+  var _d=useState([]),projects=_d[0],setProjects=_d[1];
+  var _ms=useState({}),msMap=_ms[0],setMsMap=_ms[1];
   var _l=useState(true),loading=_l[0],setLoading=_l[1];
   var _fa=useState(null),fetchedAt=_fa[0],setFetchedAt=_fa[1];
 
