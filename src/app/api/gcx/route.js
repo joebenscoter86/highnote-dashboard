@@ -135,6 +135,7 @@ function transformProject(project, tasks, milestoneMap, userMap) {
   // Bucket tasks by dashboard category
   const done = [];
   const stuck = [];
+  const risk = [];
   const wip = [];
   const up = [];
 
@@ -168,17 +169,20 @@ function transformProject(project, tasks, milestoneMap, userMap) {
     } else if (t.status === "WORKING_ON_IT") {
       if (overdue) {
         taskObj.due = formatDate(t.dueDate) + " !!";
-      } else if (t.dueDate) {
+        risk.push(taskObj);
+      } else if (isDueNextWeek(t)) {
         taskObj.due = formatDate(t.dueDate);
+        up.push(taskObj);
+      } else {
+        if (t.dueDate) taskObj.due = formatDate(t.dueDate);
+        wip.push(taskObj);
       }
-      wip.push(taskObj);
     } else if (t.status === "NOT_STARTED" || t.status === "NOT_SCHEDULED") {
-      if (isDueNextWeek(t) || overdue) {
-        if (overdue) {
-          taskObj.due = formatDate(t.dueDate) + " !!";
-        } else {
-          taskObj.due = formatDate(t.dueDate);
-        }
+      if (overdue) {
+        taskObj.due = formatDate(t.dueDate) + " !!";
+        risk.push(taskObj);
+      } else if (isDueNextWeek(t)) {
+        taskObj.due = formatDate(t.dueDate);
         up.push(taskObj);
       }
     }
@@ -198,6 +202,7 @@ function transformProject(project, tasks, milestoneMap, userMap) {
     pid: project.id,
     done,
     stuck,
+    risk,
     wip,
     up,
     milestones: msMap,
