@@ -129,7 +129,7 @@ export default function Dashboard(){
   useEffect(function(){loadData();},[]);
 
   var pms=useMemo(function(){var s={};projects.forEach(function(p){s[p.pm]=1;});return Object.keys(s).sort();},[projects]);
-  var byPM=useMemo(function(){var m={};projects.forEach(function(p){if(!m[p.pm])m[p.pm]={projects:0,atRisk:0,stuckTasks:0,done7d:0,upcoming:0};m[p.pm].projects++;if(p.status==="LATE"||p.status==="ON_HOLD"||p.stuck.length>0||(p.risk||[]).length>0)m[p.pm].atRisk++;m[p.pm].stuckTasks+=p.stuck.length;m[p.pm].done7d+=p.done.length;m[p.pm].upcoming+=p.up.length;});return m;},[projects]);
+  var byPM=useMemo(function(){var m={};projects.forEach(function(p){if(!m[p.pm])m[p.pm]={projects:0,atRisk:0,stuckTasks:0,done7d:0,upcoming:0};m[p.pm].projects++;m[p.pm].atRisk+=p.stuck.length+(p.risk||[]).length;m[p.pm].stuckTasks+=p.stuck.length;m[p.pm].done7d+=p.done.length;m[p.pm].upcoming+=p.up.length;});return m;},[projects]);
   var fp=pmFilter==="all"?projects:projects.filter(function(p){return p.pm===pmFilter;});
   var sp=projFilter==="all"?fp:fp.filter(function(p){return p.id===projFilter;});
   var risk=sp.filter(function(p){return p.status==="LATE"||p.status==="ON_HOLD"||p.stuck.length>0||(p.risk||[]).length>0;});
@@ -137,9 +137,10 @@ export default function Dashboard(){
   var withUp=sp.filter(function(p){return p.up.length>0;});
   var tD=sp.reduce(function(s,p){return s+p.done.length;},0);
   var tS=sp.reduce(function(s,p){return s+p.stuck.length;},0);
+  var tR=sp.reduce(function(s,p){return s+p.stuck.length+(p.risk||[]).length;},0);
   var tU=sp.reduce(function(s,p){return s+p.up.length;},0);
   var meetings=pmFilter==="all"?FT:FT.filter(function(m){return m.pm===pmFilter;});
-  var tabs=[{id:"team",label:"Team Overview"},{id:"risk",label:"At Risk",count:risk.length},{id:"done",label:"Last 7 Days",count:tD},{id:"up",label:"Next Week",count:tU},{id:"fathom",label:"Meetings",count:meetings.length},{id:"all",label:"All Projects",count:sp.length}];
+  var tabs=[{id:"team",label:"Team Overview"},{id:"risk",label:"At Risk",count:tR},{id:"done",label:"Last 7 Days",count:tD},{id:"up",label:"Next Week",count:tU},{id:"fathom",label:"Meetings",count:meetings.length},{id:"all",label:"All Projects",count:sp.length}];
 
   return <div style={{minHeight:"100vh",background:"#F5F3EB",fontFamily:"'Helvetica Neue', Helvetica, system-ui, sans-serif",color:"#1a1a1a"}}>
     <div style={{height:3,background:"linear-gradient(90deg,#55F5A3,#00FFF0 50%,#55F5A3)"}}/>
@@ -154,7 +155,7 @@ export default function Dashboard(){
     <div style={{padding:"24px 32px",maxWidth:1200,margin:"0 auto"}}>
       <div style={{display:"flex",gap:14,marginBottom:24,flexWrap:"wrap",position:"relative"}}><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.25) 0%,transparent 70%)",top:"50%",left:"25%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.2) 0%,transparent 70%)",top:"50%",left:"50%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.2) 0%,transparent 70%)",top:"50%",left:"75%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div>
         <Metric label="Active Projects" value={sp.length} sub={sp.filter(function(p){return p.status==="ON_TIME"}).length+" on time"}/>
-        <Metric label="At Risk" value={risk.length} color={risk.length>0?"#d97706":"#16a34a"} sub={tS+" stuck tasks"}/>
+        <Metric label="At Risk" value={tR} color={tR>0?"#d97706":"#16a34a"} sub={"across "+risk.length+" projects"}/>
         <Metric label="Tasks Done (7d)" value={tD} color="#16a34a" sub={"across "+withDone.length+" projects"}/>
         <Metric label="Tasks Next Week" value={tU} color="#1a1a1a" sub={"across "+withUp.length+" projects"}/></div>
       {projFilter!=="all"&&sp.length>0?function(){var p=sp[0];var rsk=(p.risk||[]);var stuckTasks=p.stuck;var riskTasks=rsk;var upTasks=p.up;var doneTasks=p.done;var atRiskTasks=[].concat(stuckTasks,riskTasks);var pUrl=projUrl(p.pid);var sections=[{id:"risk",label:"At Risk",tasks:atRiskTasks,color:"#dc2626"},{id:"up",label:"Next Week",tasks:upTasks,color:"#1a1a1a"},{id:"done",label:"Last 7 Days",tasks:doneTasks,color:"#16a34a"}].filter(function(s){return s.tasks.length>0;});return <div>
