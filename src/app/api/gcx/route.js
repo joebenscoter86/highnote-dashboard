@@ -146,8 +146,9 @@ function transformProject(project, tasks, milestoneMap, userMap) {
   const up = [];
 
   for (const t of tasks) {
-    // Skip hidden/not applicable tasks
-    if (t.status === "NOT_APPLICABLE" || t.visibility === "HIDDEN") continue;
+    // Skip not-applicable tasks (visibility is left alone since HIDDEN
+    // only controls subscriber-facing visibility in GuideCX, not internal relevance)
+    if (t.status === "NOT_APPLICABLE") continue;
 
     const milestoneName = milestoneMap[t.milestoneId] || null;
     const assigneeName = t.assigneeId ? userMap[t.assigneeId] || null : null;
