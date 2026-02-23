@@ -23,10 +23,10 @@ src/
     layout.js              # Root layout, minimal
     page.js                # Renders <Dashboard />
     api/
-      gcx/route.js         # GuideCX API proxy (~250 lines)
+      gcx/route.js         # GuideCX API proxy (~269 lines)
       fathom/route.js      # Fathom API proxy (~204 lines)
   components/
-    Dashboard.jsx          # THE file. All UI lives here (~166 lines)
+    Dashboard.jsx          # THE file. All UI lives here (~185 lines)
     HNMark.jsx             # Highnote logo SVG component
   data/
     projects.js            # Not actively used (static seed data)
@@ -51,10 +51,12 @@ src/
 Fetches all active projects from GuideCX, retrieves tasks for each, and transforms them into the dashboard's data model.
 
 **Data flow:**
-1. `GET /projects?status=ACTIVE` (paginated, 50 per page)
-2. For each project: `GET /projects/{id}/tasks` (paginated)
-3. Also fetches: milestones, project users (for assignee names)
+1. `GET /projects?status=ON_TIME&LATE&ON_HOLD` (paginated, 50 per page per status)
+2. For each project: `GET /projects/{id}/tasks` and `/projects/{id}/milestones` (in parallel, with per-project error handling)
+3. Also fetches: all users (paginated, for assignee name resolution)
 4. Transforms each project into: `{ id, name, status, pm, pid, done[], stuck[], risk[], wip[], up[], milestones{} }`
+
+**Error resilience:** Each project's task/milestone fetch is wrapped in its own try/catch. If one project's API call fails (e.g., GuideCX returns 400 "Invalid dependency type"), that project is skipped and logged. The rest of the dashboard still loads.
 
 **Task bucketing logic (critical to understand):**
 - `done[]` = status DONE, completed within last 7 days
@@ -85,15 +87,34 @@ Fetches recent meetings from Fathom for all PMs who have provided API keys.
 
 ## Dashboard UI (Dashboard.jsx)
 
+### Filtering
+
+**PM filter:** Dropdown in header. Filters projects by project manager name. Changing PM resets the project filter to "all."
+
+**Project filter:** Second dropdown in header, populated from PM-filtered projects (`fp`). Selecting a specific project switches to a single-project snapshot view.
+
+**Filter cascade:** `projects` -> `fp` (PM-filtered) -> `sp` (project-filtered) -> all downstream calculations (risk, withDone, withUp, tD, tS, tR, tU, metrics, tab content). `fp` is preserved only for populating the project dropdown options. `byPM` stays derived from the full `projects` array so PM metrics remain consistent.
+
 ### Tabs
 | Tab | Shows | Filter Logic |
 |-----|-------|-------------|
-| Team Overview | Per-PM metrics cards | Groups projects by PM, counts at-risk/stuck/done/upcoming |
+| Team Overview | Per-PM metrics cards | Groups projects by PM, counts at-risk/stuck/done/upcoming (task counts, not project counts) |
 | At Risk | Projects with problems | `status=LATE \|\| ON_HOLD \|\| stuck.length>0 \|\| risk.length>0` (project-level status OR task-level issues) |
 | Last 7 Days | Recently completed tasks | Projects with `done.length > 0` |
 | Next Week | Upcoming tasks (due within 7 days) | Projects with `up.length > 0`. Includes both NOT_STARTED and WORKING_ON_IT tasks. |
 | Meetings | Fathom call summaries | From `/api/fathom` (currently showing hardcoded seed data pending deployment) |
 | All Projects | Full project list | Expandable cards with sub-tabs |
+
+### Single-Project Snapshot View
+
+When a specific project is selected in the project filter, the tab bar is replaced with a stacked section view designed to be screenshot-friendly for customer sharing. The snapshot shows:
+
+1. **Project header card** with name (linked to GuideCX), status badge, and PM
+2. **At Risk** section: stuck + overdue tasks (color: `#dc2626`)
+3. **Next Week** section: tasks due within 7 days (color: `#1a1a1a`)
+4. **Last 7 Days** section: recently completed tasks (color: `#16a34a`)
+
+Empty sections are hidden. If no tasks exist, a "No tasks to display" message appears. Metrics at the top update to reflect the single project.
 
 ### Key UI Functions
 - `isOD(task)` - Client-side overdue check. Looks for `!!` suffix or "overdue" in the `due` field string. Used by `TLine` to color overdue task rows based on the `!!` suffix the API route appends to due dates.
@@ -131,6 +152,10 @@ Milestone IDs are returned dynamically from the GCX API route in `data.milestone
 3. **At Risk filter was purely task-based.** Restored project-level status checks (`LATE`, `ON_HOLD`) to the At Risk tab filter so projects surface even without stuck/overdue tasks. This distinguishes between project-level risk (GuideCX status) and task-level risk (overdue/stuck tasks).
 
 4. **Seed data removed.** Deleted static milestone map (`MS`), task builder (`T`), and seed project array (`P`). Dashboard now initializes empty and loads entirely from `/api/gcx`. Eliminates stale data risk and reduces page bundle by ~50%. Fathom seed data (`FT`) retained until live integration is complete.
+
+5. **At Risk metric showed project count instead of task count.** The At Risk metric card, tab badge, and PM breakdown were all incrementing by 1 per project with at-risk tasks instead of summing actual task counts (stuck + overdue). Fixed by adding `tR` variable (`sp.reduce` over `stuck.length + risk.length`) and updating all three locations.
+
+6. **Single bad GuideCX project took down entire dashboard.** `Promise.all` in the GCX route failed fast when any project returned an API error (e.g., 400 "Invalid dependency type"). Wrapped each project's fetch in its own try/catch, logging failures and returning null, then filtering nulls from results.
 
 ## Working with Joe
 

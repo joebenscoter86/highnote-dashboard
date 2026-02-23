@@ -116,12 +116,13 @@ export default function Dashboard(){
   var _ms=useState({}),msMap=_ms[0],setMsMap=_ms[1];
   var _l=useState(true),loading=_l[0],setLoading=_l[1];
   var _fa=useState(null),fetchedAt=_fa[0],setFetchedAt=_fa[1];
+  var _sk=useState(null),skipped=_sk[0],setSkipped=_sk[1];
 
   function loadData(bustCache){
     setLoading(true);
     var url=bustCache?"/api/gcx?t="+Date.now():"/api/gcx";
     fetch(url).then(function(r){return r.json();}).then(function(data){
-      if(data.projects){setProjects(data.projects);if(data.milestones){_activeMsMap=data.milestones;setMsMap(data.milestones);}setFetchedAt(data.fetchedAt);}
+      if(data.projects){setProjects(data.projects);if(data.milestones){_activeMsMap=data.milestones;setMsMap(data.milestones);}setFetchedAt(data.fetchedAt);setSkipped(data.skipped||null);}
       setLoading(false);
     }).catch(function(){setLoading(false);});
   }
@@ -152,6 +153,7 @@ export default function Dashboard(){
         <button onClick={function(){loadData(true);}} disabled={loading} style={{padding:"5px 10px",background:loading?"#f0ede5":"#ffffff",border:"1px solid #E2E0D6",borderRadius:8,color:loading?"#9c9789":"#1a1a1a",fontSize:11,cursor:loading?"default":"pointer",outline:"none",fontWeight:500}}>Refresh</button>
         <select value={pmFilter} onChange={function(e){setPmFilter(e.target.value);setProjFilter("all");}} style={{padding:"6px 12px",background:"#ffffff",border:"1px solid #E2E0D6",borderRadius:8,color:"#1a1a1a",fontSize:12,cursor:"pointer",outline:"none"}}><option value="all">All PMs</option>{pms.map(function(pm){return <option key={pm} value={pm}>{pm}</option>})}</select>
         <select value={projFilter} onChange={function(e){setProjFilter(e.target.value)}} style={{padding:"6px 12px",background:"#ffffff",border:"1px solid #E2E0D6",borderRadius:8,color:"#1a1a1a",fontSize:12,cursor:"pointer",outline:"none"}}><option value="all">All Projects</option>{fp.map(function(p){return <option key={p.id} value={p.id}>{p.name}</option>})}</select></div></div>
+    {skipped&&skipped.length>0&&<div style={{margin:"0 32px",padding:"10px 16px",background:"#fef3c7",border:"1px solid #f59e0b",borderRadius:10,fontSize:12,color:"#92400e",marginTop:12}}><strong>{skipped.length} project{skipped.length!==1?"s":""} skipped</strong> due to API errors: {skipped.map(function(s){return s.name;}).join(", ")}</div>}
     <div style={{padding:"24px 32px",maxWidth:1200,margin:"0 auto"}}>
       <div style={{display:"flex",gap:14,marginBottom:24,flexWrap:"wrap",position:"relative"}}><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.25) 0%,transparent 70%)",top:"50%",left:"25%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.2) 0%,transparent 70%)",top:"50%",left:"50%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div><div style={{position:"absolute",width:120,height:120,background:"radial-gradient(circle,rgba(85,245,163,0.2) 0%,transparent 70%)",top:"50%",left:"75%",transform:"translate(-50%,-50%)",pointerEvents:"none",filter:"blur(30px)"}}></div>
         <Metric label="Active Projects" value={sp.length} sub={sp.filter(function(p){return p.status==="ON_TIME"}).length+" on time"}/>

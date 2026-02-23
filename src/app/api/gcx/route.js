@@ -40,14 +40,20 @@ async function buildUserMap() {
   return map;
 }
 
-// Fetch all projects with ON_TIME, LATE, and ON_HOLD statuses
+// Fetch all projects with ON_TIME, LATE, and ON_HOLD statuses (paginated)
 async function fetchProjects() {
   const statuses = ["ON_TIME", "LATE", "ON_HOLD"];
   const all = [];
 
   for (const status of statuses) {
-    const data = await gcxFetch(`/projects?status=${status}&limit=50`);
-    all.push(...data.projects);
+    let offset = 0;
+    const limit = 50;
+    while (true) {
+      const data = await gcxFetch(`/projects?status=${status}&limit=${limit}&offset=${offset}`);
+      all.push(...data.projects);
+      if (data.projects.length < limit) break;
+      offset += limit;
+    }
   }
 
   return all;
@@ -219,6 +225,7 @@ export async function GET() {
 
     // For each project, fetch tasks and milestones in parallel
     // Wrap each in try/catch so one bad project doesn't take down the whole dashboard
+    const skipped = [];
     const settled = await Promise.all(
       projects.map(async (project) => {
         try {
@@ -229,6 +236,7 @@ export async function GET() {
           return transformProject(project, tasks, milestoneMap, userMap);
         } catch (err) {
           console.error(`Skipping project "${project.name}" (${project.id}):`, err.message);
+          skipped.push({ name: project.name, error: err.message });
           return null;
         }
       })
@@ -250,6 +258,7 @@ export async function GET() {
       projects: cleanProjects,
       milestones: milestoneIndex,
       fetchedAt: new Date().toISOString(),
+      skipped: skipped.length > 0 ? skipped : undefined,
     }), {
       headers: { "Content-Type": "application/json", "Cache-Control": "no-store, no-cache, must-revalidate" },
     });
