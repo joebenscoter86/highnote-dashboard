@@ -230,10 +230,24 @@ export async function GET() {
     const settled = await Promise.all(
       projects.map(async (project) => {
         try {
-          const [tasks, milestoneMap] = await Promise.all([
+          // Fetch tasks and milestones independently so one failing
+          // doesn't take down the other (milestones are only for deep links)
+          const [tasksResult, msResult] = await Promise.allSettled([
             fetchTasks(project.id),
             fetchMilestones(project.id),
           ]);
+
+          if (tasksResult.status === "rejected") {
+            // Can't show a project without tasks
+            throw tasksResult.reason;
+          }
+
+          const tasks = tasksResult.value;
+          const milestoneMap = msResult.status === "fulfilled" ? msResult.value : {};
+          if (msResult.status === "rejected") {
+            console.warn(`Milestones failed for "${project.name}":`, msResult.reason.message);
+          }
+
           return transformProject(project, tasks, milestoneMap, userMap);
         } catch (err) {
           console.error(`Skipping project "${project.name}" (${project.id}):`, err.message);
