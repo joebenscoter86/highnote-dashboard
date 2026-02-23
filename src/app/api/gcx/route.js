@@ -218,15 +218,22 @@ export async function GET() {
     const projects = await fetchProjects();
 
     // For each project, fetch tasks and milestones in parallel
-    const results = await Promise.all(
+    // Wrap each in try/catch so one bad project doesn't take down the whole dashboard
+    const settled = await Promise.all(
       projects.map(async (project) => {
-        const [tasks, milestoneMap] = await Promise.all([
-          fetchTasks(project.id),
-          fetchMilestones(project.id),
-        ]);
-        return transformProject(project, tasks, milestoneMap, userMap);
+        try {
+          const [tasks, milestoneMap] = await Promise.all([
+            fetchTasks(project.id),
+            fetchMilestones(project.id),
+          ]);
+          return transformProject(project, tasks, milestoneMap, userMap);
+        } catch (err) {
+          console.error(`Skipping project "${project.name}" (${project.id}):`, err.message);
+          return null;
+        }
       })
     );
+    const results = settled.filter(Boolean);
 
     // Build a combined milestone map for deep linking
     const milestoneIndex = {};
