@@ -70,7 +70,21 @@ async function fetchMilestones(projectId) {
 }
 
 // Fetch all tasks for a project (limit 200 covers most projects in one call)
+// Uses /tasks?projectId= by default, falls back to /projects/{id}/tasks
+// if the primary endpoint returns a 400 (seen with "Invalid dependency type")
 async function fetchTasks(projectId) {
+  try {
+    return await fetchTasksPrimary(projectId);
+  } catch (err) {
+    if (err.message && err.message.includes("400")) {
+      console.warn(`Primary tasks endpoint failed for ${projectId}, trying fallback:`, err.message);
+      return await fetchTasksFallback(projectId);
+    }
+    throw err;
+  }
+}
+
+async function fetchTasksPrimary(projectId) {
   const tasks = [];
   let offset = 0;
   const limit = 200;
@@ -81,6 +95,26 @@ async function fetchTasks(projectId) {
     );
     tasks.push(...data.tasks);
     if (tasks.length >= data.metadata.total) break;
+    offset += limit;
+  }
+
+  return tasks;
+}
+
+async function fetchTasksFallback(projectId) {
+  const tasks = [];
+  let offset = 0;
+  const limit = 50;
+
+  while (true) {
+    const data = await gcxFetch(
+      `/projects/${projectId}/tasks?limit=${limit}&offset=${offset}`
+    );
+    // Response shape may differ; normalize to array
+    const batch = data.tasks || data || [];
+    if (!Array.isArray(batch)) break;
+    tasks.push(...batch);
+    if (batch.length < limit) break;
     offset += limit;
   }
 
